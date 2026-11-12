@@ -12,3 +12,9 @@ Environment: macOS arm64, Orca 1.4.257, Node 26.5.0, npm Architect 0.2.0. No mod
 - Native `plugin shot` reported a settled panel, zero errors and zero pending requests. No private workspace inventory, session token, memory records or credential material is included in this repository.
 
 Static/mock tests and real desktop integration checks are distinct. The synthetic handoff is not evidence of model generation, implementation acceptance or a cloud deployment. Linux/Windows plugin behavior is not yet qualified. Catalog listing is separate from publishing a Git tag.
+
+## 0.1.1 shutdown correction
+
+Live testing found that sending Ctrl+C through the plugin host did not terminate the npm application. Version 0.1.1 resolves only the terminal id created by this plugin to Orca’s runtime-issued handle and closes that exact terminal through Orca CLI. A missing terminal is harmless; an incomplete/ambiguous inventory fails closed. No other workspace terminal is closed.
+
+Actual 0.1.1 start/stop test passed: npm Architect became ready on port 5174; Stop closed the owned terminal and the port stopped responding. TypeScript, six regression tests and both native render scenarios passed. Capabilities did not increase. This replaces the earlier Ctrl+C implementation; 0.1.0 is superseded.

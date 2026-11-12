@@ -8,7 +8,7 @@ async function fixture(run:(c:ReturnType<typeof createController>,host:ReturnTyp
  const root=await mkdtemp(join(tmpdir(),'architect-orca-'))
  const host=mockHost({capabilities,results:{'workspace.list':{workspaces:[{id:'local-1',kind:'folder',name:'Example',path:root,branch:null,hostId:'local'},{id:'remote',kind:'folder',name:'Remote',path:'/remote',branch:null,hostId:'ssh:other'}],truncated:false},'settings.get':{settings:{port:5174}},'terminal.create':{terminalId:'owned-terminal'},'terminal.sendText':{accepted:true},'workspace.open':{opened:true},'editor.open':{opened:true}}})
  let c:ReturnType<typeof createController>
- const module={default(orca:any){c=createController(orca,{probe:async()=>probe,openBrowser:async()=>{}})}}
+ const module={default(orca:any){c=createController(orca,{probe:async()=>probe,openBrowser:async()=>{},closeTerminal:async id=>{assert.equal(id,'owned-terminal');return true}})}}
  const worker=await mountWorker(module,{host})
  try{await run(c!,host,root);assert.deepEqual(worker.refusals,[])}finally{await worker.deactivate();await rm(root,{recursive:true,force:true})}
 }
@@ -18,7 +18,7 @@ test('lists only local projects and starts pinned Architect once under concurren
  assert.equal(host.callsOf('terminal.create').length,1)
  assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.0 --no-open --port 5174'})
  await assert.rejects(()=>c.start({workspaceId:'local-1'}),/Stop the previous/)
- await c.stop();assert.deepEqual(host.callsOf('terminal.sendText')[0],{terminalId:'owned-terminal',text:'\x03',enter:false})
+ assert.equal((await c.stop()).message,'Architect terminal closed.')
 }))
 test('rejects remote workspace, unknown service and injected document path',()=>fixture(async(c,host)=>{
  await assert.rejects(()=>c.start({workspaceId:'remote'}),/Select a local/)

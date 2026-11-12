@@ -16,6 +16,17 @@ export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
 export default function activate(orca:OrcaWorkerApi) {
   const controller=createController(orca,{
     probe,
+    closeTerminal:async terminalId=>{
+      const {stdout}=await run('orca',['terminal','list','--environment','local','--json'],{timeout:15000,maxBuffer:2097152})
+      const response=JSON.parse(stdout)
+      if(!response.ok||response.result.truncated)throw Error('Could not identify the Architect terminal. Close it in Orca.')
+      const matches=(response.result.terminals as {ptyId:string;handle:string}[]).filter(t=>t.ptyId===terminalId||t.handle===terminalId)
+      if(matches.length===0)return false
+      if(matches.length!==1)throw Error('Architect terminal is ambiguous. Close it in Orca.')
+      const result=await run('orca',['terminal','close','--environment','local','--terminal',matches[0].handle,'--json'],{timeout:20000,maxBuffer:1048576})
+      if(!JSON.parse(result.stdout).ok)throw Error('Could not close the Architect terminal. Try again.')
+      return true
+    },
     openBrowser:async(url,workspaceId)=>{
       try {
         const {stdout}=await run('orca',['tab','create','--environment','local','--worktree',workspaceId.startsWith('identity:')?workspaceId:`id:${workspaceId}`,'--url',url,'--json'],{timeout:20000,maxBuffer:1048576})

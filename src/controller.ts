@@ -20,6 +20,7 @@ export const DOCUMENTS: Document[] = [
 export type Dependencies = {
   probe: (url:string)=>Promise<'ready'|'offline'|'occupied'>
   openBrowser:(url:string,workspaceId:string)=>Promise<void>
+  closeTerminal:(terminalId:string)=>Promise<boolean>
 }
 export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
   let starting:Promise<{message:string}>|undefined
@@ -70,10 +71,9 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
   const stop=async()=>{
     const session=await orca.storage.get('session') as {terminalId?:string}|null
     if(!session?.terminalId)return {message:'No Architect terminal was started by this plugin.'}
-    try{await orca.host.call('terminal.sendText',{terminalId:session.terminalId,text:'\u0003',enter:false})}
-    catch(error){if(!['not_found','terminal_not_found','action_failed'].includes(String((error as {code?:string}).code)))throw error}
+    const closed=await deps.closeTerminal(session.terminalId)
     await orca.storage.delete('session')
-    return {message:'Stop requested for the plugin’s Architect terminal.'}
+    return {message:closed?'Architect terminal closed.':'Architect terminal is already closed.'}
   }
   const open=async(input:{workspaceId:string})=>{
     const ws=await workspace(input.workspaceId),{url}=await configuration()

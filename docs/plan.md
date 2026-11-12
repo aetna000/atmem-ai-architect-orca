@@ -23,3 +23,5 @@ Least authority that covers terminal startup is `trusted-worker`; sandboxed pane
 ## Follow-up
 
 Qualify Windows/Linux, support a future independently released Architect runtime, and consider a memory-specific plugin only after choosing that scope. These are not part of v0.1.0 claims.
+
+0.1.1 follow-up: actual Stop testing detected that host terminal text did not interrupt the npm app. Resolve and close only the plugin-created terminal through the documented CLI, then verify the app port closes. Keep the original release/tag immutable and publish a patch.

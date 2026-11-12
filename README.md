@@ -7,7 +7,7 @@ Design in Architect. Open the local UI inside Orca. Inspect the exported specifi
 Requires Orca 1.4.257+, Node.js 22+, and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.1.0 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.1.1 --json
 ```
 
 Orca prints the exact permissions and approval command. Review those before approving.
@@ -20,7 +20,7 @@ Orca prints the exact permissions and approval command. Review those before appr
 4. Design in Architect, then choose **Delivery → Open in Orca**.
 5. **Refresh** the plugin, select the imported folder, and open its specifications or run instructions.
 
-**Stop Architect** sends Ctrl+C only to the terminal started by this plugin. It does not stop an independently started application. Change the local port in the plugin’s Orca settings when needed.
+**Stop Architect** closes only the terminal started by this plugin, stopping its process. It does not stop an independently started application. Change the local port in the plugin’s Orca settings when needed.
 
 ## Access
 
