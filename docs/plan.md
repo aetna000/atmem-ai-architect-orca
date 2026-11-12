@@ -1,0 +1,25 @@
+# Orca integration v0.1.0
+
+Owner request, 2026-11-13: install Orca, test Architect integration, develop and publish an Orca plugin.
+
+## Scope and dependencies
+
+1. Install the official desktop app and discover its version-matched plugin API.
+2. Test the existing saved-project → ZIP → Orca CLI boundary without a model or cloud operation.
+3. Build a components panel backed by a trusted worker. Select a local project; start the pinned npm application in a dedicated terminal; open its verified local UI in Orca; inspect allowlisted exported specifications.
+4. Validate manifests, TypeScript, success/failure tests, actual worker calls and native rendering. Request the user’s exact worker/capability approval before enabling. Approval was received in this session.
+5. Publish a public Apache-2.0 Git repository, immutable v0.1.0 tag and `orca-plugin` topic. Check the directory. The generated community catalog is controlled by Orca’s indexer; do not edit it or claim listing before observation.
+
+## Sources and constraints
+
+- Installed host: Orca 1.4.257; bundled `orca-plugin-authoring` skill and generated `.orca/types` are authoritative for this build.
+- Supplementary upstream reference revision: `ee99d584d98b5c7334fa8d57153311079ecee13c`. Main has methods absent from 1.4.257; this plugin does not use those newer methods.
+- https://github.com/stablyai/orca/blob/main/docs/reference/plugin-authoring.md
+- https://github.com/stablyai/orca/blob/main/docs/reference/plugin-listing-policy.md
+- https://github.com/stablyai/orca-community-plugins
+
+Least authority that covers terminal startup is `trusted-worker`; sandboxed panels cannot send terminal commands. No MCP, skills or agent-harness contribution is claimed: Orca reserves those manifest fields. Native browser opening uses the documented Orca CLI because the installed plugin host API has no browser-tab method.
+
+## Follow-up
+
+Qualify Windows/Linux, support a future independently released Architect runtime, and consider a memory-specific plugin only after choosing that scope. These are not part of v0.1.0 claims.

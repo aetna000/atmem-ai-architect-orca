@@ -1,0 +1,21 @@
+name: validate
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  plugin:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: brew install --cask stablyai/orca/orca
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+      - run: npm ci
+      - run: orca --version && orca plugin types . --json
+      - run: npm run typecheck && npm test && npm run check

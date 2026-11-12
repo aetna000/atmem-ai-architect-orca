@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stablyai/orca/main/docs/schemas/plugins/orca-plugin.v2.schema.json",
+  "manifestVersion": 2,
+  "id": "atmem-architect",
+  "name": "AtMem AI Architect",
+  "version": "0.1.0",
+  "description": "Design in Architect, open its local UI in Orca, and inspect exported project specifications.",
+  "author": {
+    "name": "AtMem",
+    "url": "https://atmem.ai"
+  },
+  "repository": "https://github.com/aetna000/atmem-ai-architect-orca",
+  "homepage": "https://atmem.ai/ai-architect/",
+  "license": "Apache-2.0",
+  "engines": {
+    "orca": ">=1.4.257"
+  },
+  "execution": "trusted-worker",
+  "pluginApi": 1,
+  "main": "src/worker.ts",
+  "contributes": {
+    "panels": [
+      {
+        "id": "architect",
+        "title": "AI Architect",
+        "icon": "blocks",
+        "entry": "src/panel.tsx",
+        "ui": "components"
+      }
+    ],
+    "settings": [
+      {
+        "key": "port",
+        "title": "Architect port",
+        "description": "Local Architect port. Restart its terminal after changing this.",
+        "type": "integer",
+        "default": 5174,
+        "minimum": 1024,
+        "maximum": 65535
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "kind": "workspace:read"
+    },
+    {
+      "kind": "workspace:write"
+    },
+    {
+      "kind": "terminal:send"
+    },
+    {
+      "kind": "storage:own"
+    },
+    {
+      "kind": "settings:own"
+    }
+  ],
+  "icon": "assets/icon.png"
+}

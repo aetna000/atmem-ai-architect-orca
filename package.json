@@ -1,0 +1,19 @@
+{
+  "name": "atmem-ai-architect-orca",
+  "version": "0.1.0",
+  "description": "AtMem AI Architect integration for Orca",
+  "scripts": {
+    "test": "orca plugin test . --json",
+    "check": "orca plugin validate . --json && orca plugin check . --json",
+    "typecheck": "tsc -p . --noEmit"
+  },
+  "keywords": [],
+  "author": "AtMem",
+  "license": "Apache-2.0",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "typescript": "7.0.2"
+  },
+  "private": true
+}
