@@ -3,8 +3,8 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.1.3",
-  "description": "Design in Architect, open its local UI in Orca, and inspect exported project specifications.",
+  "version": "0.1.4",
+  "description": "Design applications in AtMem AI Architect’s visual workspace, open it inside Orca, and inspect specifications and Terraform files.",
   "author": {
     "name": "AtMem",
     "url": "https://atmem.ai"
@@ -57,5 +57,21 @@
       "kind": "settings:own"
     }
   ],
-  "icon": "assets/icon.png"
+  "icon": "assets/icon.png",
+  "cover": {
+    "path": "assets/workspace-cover.png",
+    "alt": "AtMem AI Architect’s enterprise knowledge-assistant workspace with ten connected components and its Terraform draft open in Orca."
+  },
+  "screenshots": [
+    {
+      "path": "assets/architect-workspace.png",
+      "alt": "Architect visual workspace showing the public enterprise knowledge assistant and its connected components.",
+      "caption": "Explore the architecture in AtMem AI Architect’s visual workspace."
+    },
+    {
+      "path": "assets/terraform-orca.png",
+      "alt": "Generated Terraform draft open in Orca beside the AtMem AI Architect panel and receiving files.",
+      "caption": "Inspect Terraform and specifications beside your code in Orca."
+    }
+  ]
 }

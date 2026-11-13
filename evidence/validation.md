@@ -36,3 +36,12 @@ The exact npm archive was independently checked against the successful Windows/m
 The32-second,1280×800 H.264 walkthrough combines actual native panel captures, a real browser recording and the resulting specification editor. It is captioned and explicitly marked as an edited sample; no implementation/deployment is represented as complete. Private workspaces, paths and user data are excluded from published frames. The full MP4 decodes without errors; intro, browser, handoff and specification frames were visually inspected. The README poster links to its public release asset.
 
 Community catalog inclusion was observed for0.1.1 at https://orca.dev/plugins/aetna000/atmem-ai-architect-orca. Newly tagged versions are ingested by Orca's automatic indexer; publishing is distinct from the directory's current indexed version.
+
+
+## 0.1.4 directory workspace gallery
+
+The public directory previously had no manifest cover/screenshots. Added a1600×1000 branded cover,1920×1200 visual-workspace screenshot and1600×1000 Terraform/Orca composition. Source is the already public Architect example `examples/aws/07-enterprise-connectors/project.atmem-ai-architect.json`: ten components and27 Terraform resource types. Only the sample copy's name/id and visual positions changed; requirements, services and connections are retained.
+
+Captured the actual installed Architect0.2.1 UI, its generated Terraform JSON in Orca's editor, and the native plugin panel with the public receiving folder. The cover/gallery use framed crops of these real captures. Private workspace navigation and local account paths are excluded. Images explicitly describe a draft and do not claim cloud deployment or project acceptance.
+
+Cover and gallery inspected visually; each is within the installed Orca manifest's image dimensions/byte bounds. The README now leads with the workspace and links the Terraform detail, while retaining the video. No executable behavior, npm pin, capabilities or required Orca version changes.

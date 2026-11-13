@@ -1,6 +1,10 @@
 # AtMem AI Architect for Orca
 
-Design in Architect. Open the local UI inside Orca. Inspect the exported specifications beside your code.
+Open AtMem AI Architect’s visual workspace inside Orca. Design applications, review requirements and inspect Terraform beside your code.
+
+![AtMem AI Architect workspace and Terraform in Orca](assets/workspace-cover.png)
+
+[Explore the workspace](assets/architect-workspace.png) · [See Terraform in Orca](assets/terraform-orca.png)
 
 [Public Orca listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca)
 
@@ -15,7 +19,7 @@ Select a project, open Architect, send the design handoff to Orca, and inspect i
 Requires Orca 1.4.257+, Node.js 22+, and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.1.3 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.1.4 --json
 ```
 
 Orca prints the exact permissions and approval command. Review those before approving.

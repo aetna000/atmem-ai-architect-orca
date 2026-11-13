@@ -31,3 +31,6 @@ Qualify Windows/Linux, support a future independently released Architect runtime
 
 
 0.1.3 stable update: pin the public npm Architect0.2.1 maintenance release, verify startup/open/stop after registry publication, retain unchanged capabilities and publish an immutable tag. Community catalog inclusion is observed for0.1.1; newer tag ingestion is controlled by Orca's automatic indexer.
+
+
+0.1.4 owner request: show the actual Architect workspace, a complex public example and Terraform/Orca in the plugin directory. Register a branded cover and screenshot gallery in the manifest, not only the README. Use public enterprise-connectors evidence and preserve all visible draft/review limitations; no private project capture or generated-image imitation of product UI.
