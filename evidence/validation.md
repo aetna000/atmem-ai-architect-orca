@@ -25,3 +25,14 @@ Actual 0.1.1 start/stop test passed: npm Architect became ready on port 5174; St
 The owner requested prominent AtMem branding. The panel title is now AtMem AI Architect. A bundled image uses the existing AtMem brain, pink palette and outlined DM Sans title; no external font/image requests are needed. Native controls sit in a spaced card. Assets are derived from AtMem’s own https://atmem.ai/brand/atmem-brain.svg and bundled DM Sans.
 
 TypeScript, six tests (including branded image/name assertion), manifest validation and both render scenarios passed. Native screenshots at 807px and 360px widths settled with zero errors/pending requests. The narrow screenshot is [retained here](branded-panel.png). Access is unchanged: trusted worker, workspace read/write, terminal commands and own storage/settings. No new startup/model/cloud actions.
+
+
+## 0.1.3 stable Architect pin and walkthrough
+
+Starts stable npm Architect0.2.1 (AtMem2.3.14). TypeScript, six action/security regression tests, manifest validation and both native render scenarios passed. Capabilities and commands are unchanged.
+
+The exact npm archive was independently checked against the successful Windows/macOS/Linux trusted-publisher workflow and registry integrity/provenance. A fresh registry install reports0.2.1. Live development worker actions selected a public sample folder, connected to the isolated0.2.1 service on a configured free port, opened Architect in an actual Orca browser tab, imported the actual design ZIP and opened its specification. No model or cloud calls.
+
+The32-second,1280×800 H.264 walkthrough combines actual native panel captures, a real browser recording and the resulting specification editor. It is captioned and explicitly marked as an edited sample; no implementation/deployment is represented as complete. Private workspaces, paths and user data are excluded from published frames. The full MP4 decodes without errors; intro, browser, handoff and specification frames were visually inspected. The README poster links to its public release asset.
+
+Community catalog inclusion was observed for0.1.1 at https://orca.dev/plugins/aetna000/atmem-ai-architect-orca. Newly tagged versions are ingested by Orca's automatic indexer; publishing is distinct from the directory's current indexed version.

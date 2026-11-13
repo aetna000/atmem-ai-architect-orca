@@ -16,7 +16,7 @@ test('lists only local projects and starts pinned Architect once under concurren
  assert.equal((await c.overview()).workspaces[0].id,'local-1')
  await Promise.all([c.start({workspaceId:'local-1'}),c.start({workspaceId:'local-1'})])
  assert.equal(host.callsOf('terminal.create').length,1)
- assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.0 --no-open --port 5174'})
+ assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.1 --no-open --port 5174'})
  await assert.rejects(()=>c.start({workspaceId:'local-1'}),/Stop the previous/)
  assert.equal((await c.stop()).message,'Architect terminal closed.')
 }))

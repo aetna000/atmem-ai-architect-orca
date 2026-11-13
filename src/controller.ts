@@ -62,7 +62,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       if(state==='ready')return {message:'Architect is running. Open Architect.'}
       if(state==='occupied')throw Error('That port serves another app. Change the Architect port in plugin settings.')
       if(await orca.storage.get('session'))throw Error('Stop the previous Architect terminal before restarting.')
-      const {terminalId}=await orca.host.call('terminal.create',{workspaceId:ws.id,title:'AtMem AI Architect',command:`npx --yes @atmem/architect@0.2.0 --no-open --port ${config.port}`})
+      const {terminalId}=await orca.host.call('terminal.create',{workspaceId:ws.id,title:'AtMem AI Architect',command:`npx --yes @atmem/architect@0.2.1 --no-open --port ${config.port}`})
       await orca.storage.set('session',{terminalId})
       return {message:'Starting in its terminal. When ready, open Architect.'}
     })()

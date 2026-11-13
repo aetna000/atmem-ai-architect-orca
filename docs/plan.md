@@ -28,3 +28,6 @@ Qualify Windows/Linux, support a future independently released Architect runtime
 
 
 0.1.2 owner follow-up: replace the plain panel identity with AtMem AI Architect, the existing AtMem brain, pink header and native framed controls. Preserve action semantics and capabilities. Verify branding at a narrow sidebar width before publishing.
+
+
+0.1.3 stable update: pin the public npm Architect0.2.1 maintenance release, verify startup/open/stop after registry publication, retain unchanged capabilities and publish an immutable tag. Community catalog inclusion is observed for0.1.1; newer tag ingestion is controlled by Orca's automatic indexer.

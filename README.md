@@ -2,22 +2,28 @@
 
 Design in Architect. Open the local UI inside Orca. Inspect the exported specifications beside your code.
 
+[Public Orca listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca)
+
+## Watch the walkthrough
+
+[![Watch the 32-second Orca walkthrough](assets/walkthrough-poster.png)](https://github.com/aetna000/atmem-ai-architect-orca/releases/download/v0.1.3/atmem-ai-architect-orca-walkthrough.mp4)
+
+Select a project, open Architect, send the design handoff to Orca, and inspect its specifications. Captioned sample walkthrough.
+
 ## Install
 
 Requires Orca 1.4.257+, Node.js 22+, and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.1.2 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.1.3 --json
 ```
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-![AtMem AI Architect panel](evidence/branded-panel.png)
-
 ## Use
 
 1. Open **AtMem AI Architect** in Orca’s right sidebar and select a local project.
-2. **Start Architect** opens a dedicated terminal running `npx --yes @atmem/architect@0.2.0 --no-open`.
+2. **Start Architect** opens a dedicated terminal running `npx --yes @atmem/architect@0.2.1 --no-open`.
 3. When the terminal prints its address, choose **Open Architect**.
 4. Design in Architect, then choose **Delivery → Open in Orca**.
 5. **Refresh** the plugin, select the imported folder, and open its specifications or run instructions.
@@ -32,7 +38,7 @@ The panel has no direct network access. The worker checks the chosen loopback po
 
 ## Compatibility
 
-Tested on macOS arm64 with Orca 1.4.257 and the published Architect 0.2.0. Windows/Linux plugin execution is unqualified. Architect 0.2.0 includes its previously qualified AtMem runtime; the separate Architect runtime update must be released before npm users receive it.
+Tested on macOS arm64 with Orca 1.4.257. This version starts stable Architect 0.2.1, including AtMem 2.3.14. Windows/Linux plugin execution remains unqualified.
 
 This plugin opens and inspects a handoff; it does not prove generation quality, run project code or deploy cloud resources. [Validation](evidence/validation.md) · [Plan](docs/plan.md) · [Architect](https://atmem.ai/ai-architect/)
 
