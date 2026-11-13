@@ -25,3 +25,6 @@ Least authority that covers terminal startup is `trusted-worker`; sandboxed pane
 Qualify Windows/Linux, support a future independently released Architect runtime, and consider a memory-specific plugin only after choosing that scope. These are not part of v0.1.0 claims.
 
 0.1.1 follow-up: actual Stop testing detected that host terminal text did not interrupt the npm app. Resolve and close only the plugin-created terminal through the documented CLI, then verify the app port closes. Keep the original release/tag immutable and publish a patch.
+
+
+0.1.2 owner follow-up: replace the plain panel identity with AtMem AI Architect, the existing AtMem brain, pink header and native framed controls. Preserve action semantics and capabilities. Verify branding at a narrow sidebar width before publishing.

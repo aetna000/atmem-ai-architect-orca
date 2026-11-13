@@ -3,7 +3,7 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Design in Architect, open its local UI in Orca, and inspect exported project specifications.",
   "author": {
     "name": "AtMem",
@@ -22,7 +22,7 @@
     "panels": [
       {
         "id": "architect",
-        "title": "AI Architect",
+        "title": "AtMem AI Architect",
         "icon": "blocks",
         "entry": "src/panel.tsx",
         "ui": "components"

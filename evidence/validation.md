@@ -18,3 +18,10 @@ Static/mock tests and real desktop integration checks are distinct. The syntheti
 Live testing found that sending Ctrl+C through the plugin host did not terminate the npm application. Version 0.1.1 resolves only the terminal id created by this plugin to Orca’s runtime-issued handle and closes that exact terminal through Orca CLI. A missing terminal is harmless; an incomplete/ambiguous inventory fails closed. No other workspace terminal is closed.
 
 Actual 0.1.1 start/stop test passed: npm Architect became ready on port 5174; Stop closed the owned terminal and the port stopped responding. TypeScript, six regression tests and both native render scenarios passed. Capabilities did not increase. This replaces the earlier Ctrl+C implementation; 0.1.0 is superseded.
+
+
+## 0.1.2 branding
+
+The owner requested prominent AtMem branding. The panel title is now AtMem AI Architect. A bundled image uses the existing AtMem brain, pink palette and outlined DM Sans title; no external font/image requests are needed. Native controls sit in a spaced card. Assets are derived from AtMem’s own https://atmem.ai/brand/atmem-brain.svg and bundled DM Sans.
+
+TypeScript, six tests (including branded image/name assertion), manifest validation and both render scenarios passed. Native screenshots at 807px and 360px widths settled with zero errors/pending requests. The narrow screenshot is [retained here](branded-panel.png). Access is unchanged: trusted worker, workspace read/write, terminal commands and own storage/settings. No new startup/model/cloud actions.

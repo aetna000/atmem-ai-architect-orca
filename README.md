@@ -7,14 +7,16 @@ Design in Architect. Open the local UI inside Orca. Inspect the exported specifi
 Requires Orca 1.4.257+, Node.js 22+, and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.1.1 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.1.2 --json
 ```
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
+![AtMem AI Architect panel](evidence/branded-panel.png)
+
 ## Use
 
-1. Open **AI Architect** in Orca’s right sidebar and select a local project.
+1. Open **AtMem AI Architect** in Orca’s right sidebar and select a local project.
 2. **Start Architect** opens a dedicated terminal running `npx --yes @atmem/architect@0.2.0 --no-open`.
 3. When the terminal prints its address, choose **Open Architect**.
 4. Design in Architect, then choose **Delivery → Open in Orca**.
