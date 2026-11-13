@@ -1,6 +1,6 @@
 {
   "name": "atmem-ai-architect-orca",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "AtMem AI Architect integration for Orca",
   "scripts": {
     "test": "orca plugin test . --json",

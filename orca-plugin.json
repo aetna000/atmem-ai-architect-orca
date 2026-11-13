@@ -3,7 +3,7 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Design applications in AtMem AI Architect’s visual workspace, open it inside Orca, and inspect specifications and Terraform files.",
   "author": {
     "name": "AtMem",
@@ -60,7 +60,7 @@
   "icon": "assets/icon.png",
   "cover": {
     "path": "assets/workspace-cover.png",
-    "alt": "AtMem AI Architect’s enterprise knowledge-assistant workspace with ten connected components and its Terraform draft open in Orca."
+    "alt": "Midnight cover showing Architect’s enterprise diagram with a floating Terraform excerpt and AtMem AI Architect branding."
   },
   "screenshots": [
     {

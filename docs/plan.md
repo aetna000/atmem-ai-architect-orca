@@ -34,3 +34,6 @@ Qualify Windows/Linux, support a future independently released Architect runtime
 
 
 0.1.4 owner request: show the actual Architect workspace, a complex public example and Terraform/Orca in the plugin directory. Register a branded cover and screenshot gallery in the manifest, not only the README. Use public enterprise-connectors evidence and preserve all visible draft/review limitations; no private project capture or generated-image imitation of product UI.
+
+
+0.1.5: Owner reviewed three unpublished concepts and selected Midnight. Publish the exact approved image as the cover, retaining the workspace/Terraform screenshot gallery and existing runtime/capabilities.

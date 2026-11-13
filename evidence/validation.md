@@ -45,3 +45,8 @@ The public directory previously had no manifest cover/screenshots. Added a1600×
 Captured the actual installed Architect0.2.1 UI, its generated Terraform JSON in Orca's editor, and the native plugin panel with the public receiving folder. The cover/gallery use framed crops of these real captures. Private workspace navigation and local account paths are excluded. Images explicitly describe a draft and do not claim cloud deployment or project acceptance.
 
 Cover and gallery inspected visually; each is within the installed Orca manifest's image dimensions/byte bounds. The README now leads with the workspace and links the Terraform detail, while retaining the video. No executable behavior, npm pin, capabilities or required Orca version changes.
+
+
+## 0.1.5 approved Midnight cover
+
+The owner reviewed three local previews and explicitly selected Midnight. The published cover is byte-identical to approved option2:1600×1000, dark background, AtMem brain/title, actual public enterprise workspace capture and a floating syntax-highlighted excerpt from its generated Terraform JSON. The excerpt is labeled; it is an illustration of actual source, not a claimed screenshot of an Orca code editor or a validation result. Existing real screenshot gallery remains. No runtime, capabilities, npm pin or execution behavior changes.
