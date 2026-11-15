@@ -21,6 +21,19 @@ export const embeddedLayout = `(() => {
   let style = document.getElementById(id);
   if (!style) { style = document.createElement('style'); style.id = id; document.head.append(style); }
   style.textContent = '@media(max-width:900px){html,body,#root{height:100%;overflow:hidden}.app{height:100dvh;min-height:0;grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto minmax(100px,1fr) minmax(300px,50dvh);overflow:hidden}.app.chat-closed,.app.build-workspace{grid-template-rows:auto auto minmax(0,1fr)}.app>.canvas{min-height:0;height:auto;overflow:hidden}.app>.chat{height:auto;min-height:0;overflow:hidden}.chat>.messages{min-height:0;flex:1;overflow:auto}.chat>.composer{position:relative;flex-shrink:0;background:var(--paper)}}';
+  style.textContent += '.chat>.composer{padding:6px 8px;border-radius:14px}.chat>.composer textarea{min-height:32px;height:32px;max-height:120px;padding:4px 6px;font-size:14px;line-height:20px;resize:none;overflow-y:auto}.chat>.composer .composer-actions{padding-top:2px}.chat>.composer .composer-actions button{width:32px;height:32px;min-height:32px;padding:6px}';
+  const resize=()=>{
+    const input=document.querySelector('.chat>.composer textarea');if(!input)return;
+    input.style.height='32px';input.style.height=Math.min(120,Math.max(32,input.scrollHeight))+'px';
+  };
+  if(!window.__atmemCompactComposer){
+    window.__atmemCompactComposer=true;
+    let queued=false;const schedule=()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;resize()})};
+    document.addEventListener('input',event=>{if(event.target.matches?.('.chat>.composer textarea'))resize()});
+    window.addEventListener('resize',schedule);
+    new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+  resize();
   window.scrollTo(0,0);
   return 'layout-ready';
 })()`
