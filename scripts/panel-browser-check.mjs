@@ -41,8 +41,9 @@ try{
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
  assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
  assert.equal(await page.getByRole('link',{name:'Contact us',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')
- assert.equal(await page.getByRole('button',{name:'Start',exact:true}).isEnabled(),true)
- await page.getByRole('button',{name:'Start',exact:true}).click()
+ assert.equal(await page.getByRole('button',{name:'Start new',exact:true}).isEnabled(),true)
+ assert.equal(await page.locator('#example-fields img,.example-note').count(),0)
+ await page.getByRole('button',{name:'Start new',exact:true}).click()
  await page.getByRole('button',{name:'Continue in Architect',exact:true}).waitFor()
  assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{name:'AI knowledge assistant example',template:'knowledge-assistant',example:true})
  checks++
@@ -65,17 +66,19 @@ try{
  await page.getByLabel('Saved design',{exact:true}).selectOption('two.atforma.json')
  await page.getByRole('button',{name:'Open design in Architect',exact:true}).click()
  await page.getByRole('alert').filter({hasText:'invalid JSON'}).waitFor();checks++
- await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
- await page.getByRole('tab',{name:'Templates',exact:true}).click()
- await page.getByRole('button',{name:/Knowledge assistant/}).click()
- assert.equal(await page.getByLabel('Project name',{exact:true}).inputValue(),'Knowledge assistant')
- assert.equal(await page.locator('#template-preview').getAttribute('src'),'../assets/templates/knowledge-assistant.svg')
- await page.locator('#template-preview').evaluate(img=>img.decode())
- assert.ok(await page.locator('#template-preview').evaluate(img=>img.naturalWidth>0))
- await page.screenshot({path:'/tmp/architect-template-gallery.png',fullPage:true})
- await page.getByRole('button',{name:'Use this template',exact:true}).click()
- assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{name:'Knowledge assistant',template:'knowledge-assistant'})
- checks++
+ for(const template of [{id:'private-storage',title:'Private file storage'},{id:'document-processing',title:'Document processing'},{id:'knowledge-assistant',title:'Knowledge assistant'}]){
+  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+  await page.getByRole('tab',{name:'Templates',exact:true}).click()
+  await page.getByRole('button',{name:new RegExp(template.title)}).click()
+  assert.equal(await page.getByLabel('Project name',{exact:true}).inputValue(),template.title)
+  assert.equal(await page.locator('#template-preview').getAttribute('src'),'../assets/templates/'+template.id+'.svg')
+  await page.locator('#template-preview').evaluate(img=>img.decode())
+  assert.ok(await page.locator('#template-preview').evaluate(img=>img.naturalWidth>0))
+  if(template.id==='knowledge-assistant')await page.screenshot({path:'/tmp/architect-template-gallery.png',fullPage:true})
+  await page.getByRole('button',{name:'Use this template',exact:true}).click()
+  assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{name:template.title,template:template.id})
+  checks++
+ }
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
  for(const width of [280,360,400,560]){
   await page.setViewportSize({width,height:width===560?1180:779})

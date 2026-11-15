@@ -31,7 +31,7 @@ function render(){
  $('folder-note').textContent=!state.projects.length?'Open a local folder in Orca, or start a new project here.':!state.selected?'Choose the folder you want to design for.':state.designs.length?'Opens the saved design and keeps your latest Architect edits.':'Starts a blank design. Existing source code is not imported.'
  $('launch').disabled=state.busy||(existing?(state.loading||!state.selected||(state.designs.length>1&&!state.source)):(!demo&&!$('project-name').value.trim()))
  $('launch').setAttribute('aria-busy',String(state.busy))
- $('launch-label').textContent=state.busy?'Opening your design…':demo?'Start':existing?(state.opened?'Continue in Architect':'Open design in Architect'):($('project-name').value.trim()?(state.mode==='template'?'Use this template':'Start designing'):'Enter a project name')
+ $('launch-label').textContent=state.busy?'Opening your design…':demo?'Start new':existing?(state.opened?'Continue in Architect':'Open design in Architect'):($('project-name').value.trim()?(state.mode==='template'?'Use this template':'Start designing'):'Enter a project name')
  $('setup-note').hidden=state.opened||state.busy
  $('setup-note').textContent=demo?'Explore without connecting a model. Connect when you create your own project.':'First run installs Architect locally. We’ll open model setup so you can start chatting.'
  $('return-guide').hidden=!state.opened

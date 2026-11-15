@@ -78,3 +78,11 @@ The initial Start action opens the bundled Knowledge assistant example with no n
 A page-scoped example marker and Create new project action use Architect’s native new-project flow. After confirmation, the example marker and deep link are removed, avoiding a reload that would reopen the example. Native project switching preserves the saved example. The helper does not fill model credentials or send prompts.
 
 Eleven worker/project tests and eight browser checks pass. The live desktop test opened the 10-component example with its marker and Create new project control, followed that native action into a blank board, confirmed zero components and removal of the example/deep-link parameters, then reopened the saved example. The default panel Start request is checked without a name or model. No model or cloud operations.
+
+## Visible reset and simpler entry — local.10
+
+Added a visible bin + Reset board action in the board toolbar. It uses Architect’s native project transition with a confirmation explaining the cleared scope. This creates a new project ID, clearing nodes, edges, requirements, decisions, conversation and draft input rather than merely hiding messages or removing diagram nodes. Prior saved projects and model selection remain. The old node-only Clear board and chat-view-only bin are hidden to avoid misleading alternatives. Active work uses the native guard and visible working/queued states.
+
+The live isolated-browser test verifies cancellation preserves the original ID, and confirmation creates a new ID with zero nodes/edges/requirements/decisions/user chat turns and an empty composer. The current live tab also shows the enabled labeled bin; its contents were not reset. No model prompts sent. TypeScript, manifest validation and the responsive embedded checks pass.
+
+Removed the initial schematic image and review caption at the owner’s request. Primary entry reads Start new. Templates retains its previews; browser checks now exercise every template button, preview decoding and corresponding open request (10 panel checks total).

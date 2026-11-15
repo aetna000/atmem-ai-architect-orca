@@ -5,6 +5,7 @@ import {createController} from './controller'
 import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
+import {boardReset} from '../panel/board-reset.mjs'
 import {modelSetupReady,openModelSetup,embeddedLayout,exampleWelcome} from '../panel/model-onboarding.mjs'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
@@ -59,6 +60,8 @@ export default function activate(orca:OrcaWorkerApi) {
         if(!JSON.parse(ready.stdout).ok)throw Error('Project has not finished loading.')
         const layout=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',embeddedLayout,'--json'],{timeout:10000,maxBuffer:1048576})
         if(!JSON.parse(layout.stdout).ok)throw Error('Embedded layout could not load.')
+        const reset=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',boardReset,'--json'],{timeout:10000,maxBuffer:1048576})
+        if(!JSON.parse(reset.stdout).ok)throw Error('Reset control could not load.')
         const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',address.searchParams.get('example')==='1'?exampleWelcome:openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
         if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
       }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}

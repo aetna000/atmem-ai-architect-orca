@@ -24,12 +24,12 @@ orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-## Local onboarding preview (0.2.0-local.9)
+## Local onboarding preview (0.2.0-local.10)
 
 This branch is a local preview; the public install command above still installs 0.1.5.
 
 1. Open **AtMem AI Architect** in Orca’s right sidebar.
-2. Choose **Start** to open the ready AI Knowledge assistant example, with no project name or model connection required.
+2. Choose **Start new** to open the ready AI Knowledge assistant example, with no project name or model connection required.
 3. Explore its design, then choose **Create new project** in Architect to begin your own. The sidebar also offers a named blank-project shortcut and selectable templates. Model setup opens for personal work when needed.
 4. To resume existing work, choose **Open folder**, select its Orca folder, and choose **Open design in Architect**.
 5. In Architect, choose **Delivery → Open in Orca**. The panel detects newly registered design folders while open; **Reload folders and files** is the fallback.
@@ -77,4 +77,6 @@ Folder choices are sorted newest first and show local date/time: “Opened” fo
 
 Choose **Templates** to preview Private file storage, Document processing, or Knowledge assistant. Each uses a public AWS sample. **Use this template** creates an independent design with a new project ID; review the example’s requirements and assumptions before adapting it. Project opening closes the plugin sidebar to give Architect room. Reopen the plugin from Orca’s right sidebar when needed.
 
-**Start** now opens the ready Knowledge assistant example immediately, without naming a project or connecting a model first. The example is labeled as a sample design. **Create new project** in its toolbar opens Architect’s normal new-project flow; the example is preserved and the resulting blank board uses its own project ID. Model setup remains available when creating your own work.
+**Start new** now opens the ready Knowledge assistant example immediately, without naming a project or connecting a model first. The example is labeled as a sample design. **Create new project** in its toolbar opens Architect’s normal new-project flow; the example is preserved and the resulting blank board uses its own project ID. Model setup remains available when creating your own work.
+
+The board toolbar includes a visible bin labeled **Reset board**. Confirmation starts a fresh project scope with an empty board, conversation, requirements and decisions; saved projects and the model connection remain. The initial screen no longer shows the example diagram preview; previews remain in Templates.
