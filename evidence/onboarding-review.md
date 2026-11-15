@@ -30,3 +30,9 @@ The real worker started pinned Architect 0.2.1 in its dedicated Orca terminal on
 ## Rollback
 
 Disable `local.atmem-architect`, then enable the original installed `aetna000.atmem-architect` in Orca Settings → Plugins. Both retain separate settings/storage. Keep created designs and project folders; rollback does not require deleting user work. Nothing was published.
+
+## Reference layout — local.2
+
+Replaced the native components panel with a bundled HTML/CSS panel matching the owner’s supplied reference: Midnight hero, pink primary action, two project tabs, named input, three journey cards and a bottom runtime footer. Preserved the project bridge and worker actions. Runtime text now uses an actual probe; “Local preview” is shown instead of an unverified “up to date” claim. No additional capabilities.
+
+Nine worker/project regression tests, TypeScript and manifest/native validation pass. Five browser checks pass: new-project request, stop/status update, keyboard tab navigation, selected-design failure, and no horizontal overflow at 280/360/400/560px. Browser screenshots at 360px and 560px and the actual 360px Orca HTML panel were inspected. Native panel screenshot settled without errors. HTML panels are not rendered by the components check; real capture and browser tests cover that surface. DM Sans and its OFL license are bundled locally; the panel loads no external fonts or assets.

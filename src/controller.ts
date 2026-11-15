@@ -61,7 +61,10 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     if(rel==='..'||rel.startsWith('..'+sep)||!(await lstat(target)).isFile())throw Error('Choose a regular project document.')
     return {ws,path}
   }
-  const overview=async()=>({workspaces:(await workspaces()).map(({id,name,project,path})=>{const label=project||path.split(/[\\/]/).filter(Boolean).at(-1);return {id,name:label===name?name:`${label} · ${name}`}}),url:(await configuration()).url,owned:!!(await orca.storage.get('session'))})
+  const overview=async()=>{
+    const {url}=await configuration()
+    return {workspaces:(await workspaces()).map(({id,name,project,path})=>{const label=project||path.split(/[\\/]/).filter(Boolean).at(-1);return {id,name:label===name?name:`${label} · ${name}`}}),url,owned:!!(await orca.storage.get('session')),runtime:await deps.probe(url)}
+  }
   const start=async(input:{workspaceId:string})=>{
     if(starting)return starting
     starting=(async()=>{

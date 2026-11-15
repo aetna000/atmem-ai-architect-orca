@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AtMem AI Architect</title>
+  <link rel="stylesheet" href="./panel.css">
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <h1 id="headline">What do you want to <span>build?</span></h1>
+      <p id="intro">Describe the idea. Architect turns it into a design, requirements and project files.</p>
+    </header>
+    <main>
+      <div class="switcher" role="tablist" aria-label="Project source">
+        <button id="new-tab" role="tab" aria-selected="true" aria-controls="new-fields">New project</button>
+        <button id="folder-tab" role="tab" aria-selected="false" aria-controls="folder-fields" tabindex="-1">Existing folder</button>
+      </div>
+      <form id="project-form">
+        <section id="new-fields" role="tabpanel" aria-labelledby="new-tab">
+          <label for="project-name">Project name</label>
+          <input id="project-name" name="projectName" placeholder="e.g. Customer support assistant" maxlength="100" autocomplete="off" required>
+        </section>
+        <section id="folder-fields" role="tabpanel" aria-labelledby="folder-tab" hidden>
+          <label for="folder">Orca folder</label>
+          <select id="folder"><option value="">Choose a folder</option></select>
+          <p id="folder-note" class="support"></p>
+          <div id="source-field" hidden>
+            <label for="source">Saved design</label>
+            <select id="source"><option value="">Choose a design</option></select>
+          </div>
+        </section>
+        <button id="launch" class="primary" type="submit" disabled><span id="launch-label">Start designing</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg></button>
+        <p id="progress" role="status" class="notice" hidden></p>
+        <div id="failure" role="alert" class="error" hidden></div>
+        <p id="setup-note" class="support">First run installs Architect locally. Pick a model connection inside Architect when you’re ready.</p>
+      </form>
+      <section class="journey" aria-labelledby="journey-title">
+        <h2 id="journey-title">From idea to project</h2>
+        <ol>
+          <li><span class="number">01</span><strong>Describe</strong><span>your goal in Architect</span></li>
+          <li><span class="number">02</span><strong>Review</strong><span>the proposed architecture</span></li>
+          <li><span class="number">03</span><strong>Import</strong><span>the files back into Orca</span></li>
+        </ol>
+      </section>
+      <section id="return-guide" class="return-guide" hidden>
+        <h2>Bring your work back</h2>
+        <p>In Architect, choose Delivery → Open in Orca. Delivered files appear here when the folder is detected.</p>
+      </section>
+      <section id="documents" hidden><h2>Review project files</h2><div id="file-list"></div></section>
+    </main>
+    <footer>
+      <div class="runtime-row">
+        <div class="runtime"><span id="runtime-dot" class="dot" aria-hidden="true"></span><div><strong id="runtime-label">Checking runtime…</strong><code id="address"></code></div></div>
+        <button id="stop" class="secondary" hidden>Stop</button>
+      </div>
+      <div class="footer-links">
+        <a href="https://atmem.ai/ai-architect/install/" id="guide" target="_blank" rel="noopener noreferrer">Getting started</a>
+        <button id="reload" class="text-button">Reload folders</button>
+        <span class="version">v0.2.0-local.2<br>Local preview</span>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="./panel.mjs"></script>
+</body>
+</html>

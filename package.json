@@ -1,17 +1,19 @@
 {
   "name": "atmem-ai-architect-orca",
-  "version": "0.2.0-local.1",
+  "version": "0.2.0-local.2",
   "description": "AtMem AI Architect integration for Orca",
   "scripts": {
     "test": "orca plugin test . --json",
     "check": "orca plugin validate . --json && orca plugin check . --json",
-    "typecheck": "tsc -p . --noEmit"
+    "typecheck": "tsc -p . --noEmit",
+    "test:panel": "node scripts/panel-browser-check.mjs"
   },
   "keywords": [],
   "author": "AtMem",
   "license": "Apache-2.0",
   "type": "module",
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@types/node": "26.6.6",
     "typescript": "7.0.2"
   },

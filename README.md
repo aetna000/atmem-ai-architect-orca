@@ -24,7 +24,7 @@ orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-## Local onboarding preview (0.2.0-local.1)
+## Local onboarding preview (0.2.0-local.2)
 
 This branch is a local preview; the public install command above still installs 0.1.5.
 
@@ -40,7 +40,7 @@ Imported designs are saved through Architect’s authenticated local project API
 
 New-project folders live in `~/.atmem-architect/orca-projects/`. Designs live in the configured Architect data store. No source repository files are modified. Reusing the same new-project name resumes its linked folder, including after a startup retry.
 
-Startup shows progress and waits for readiness. Slow first-time installation can outlast the wait; retry after setup finishes. Runtime address and **Stop local Architect** are under **Help and runtime**. Stop is shown only when the plugin has a terminal session record. It closes that recorded terminal, not an independent application. Change the port in Orca’s plugin settings if another app occupies it.
+Startup shows progress and waits for readiness. Slow first-time installation can outlast the wait; retry after setup finishes. The footer shows the actual local runtime status and address. **Stop** appears only for the plugin’s recorded terminal session. **Reset** clears that session when the runtime is offline. It closes that recorded terminal, not an independent application. Change the port in Orca’s plugin settings if another app occupies it.
 
 ## Access
 
@@ -62,8 +62,11 @@ orca plugin types . --json
 npm run typecheck
 npm test
 npm run check
+npm run test:panel
 ```
 
 For live development, use `orca plugin dev load . --json` and review its approval request. Development folders run as `local.atmem-architect`; a Git install runs as `aetna000.atmem-architect`.
 
 AtMem-owned code: Apache-2.0. This is an AtMem integration, not an Orca-endorsed plugin.
+
+The HTML panel bundles DM Sans under its SIL Open Font License; see `assets/fonts/DM-Sans-OFL.txt`. Browser checks use Playwright Chromium.
