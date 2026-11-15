@@ -43,9 +43,14 @@ export default function activate(orca:OrcaWorkerApi) {
     },
     openBrowser:async(url,workspaceId)=>{
       try {
-        const {stdout}=await run('orca',['tab','create','--environment','local','--worktree',workspaceId.startsWith('identity:')?workspaceId:`id:${workspaceId}`,'--url',url,'--json'],{timeout:20000,maxBuffer:1048576})
-        if(!JSON.parse(stdout).ok)throw Error('Orca refused the browser tab.')
-      }catch{throw Error('Could not open the Orca browser. Enable Orca CLI, or open the local address manually.')}
+        const address=new URL(url);address.hostname='localhost'
+        const worktree=workspaceId.startsWith('identity:')?workspaceId:`id:${workspaceId}`
+        const {stdout}=await run('orca',['tab','create','--environment','local','--worktree',worktree,'--url',address.href,'--json'],{timeout:20000,maxBuffer:1048576})
+        const created=JSON.parse(stdout)
+        if(!created.ok||typeof created.result?.browserPageId!=='string')throw Error('Orca refused the browser tab.')
+        const focused=await run('orca',['tab','switch','--environment','local','--worktree',worktree,'--page',created.result.browserPageId,'--focus','--json'],{timeout:20000,maxBuffer:1048576})
+        if(!JSON.parse(focused.stdout).ok)throw Error('Orca could not focus the browser tab.')
+      }catch{throw Error('Could not show Architect in Orca. Enable Orca CLI, then retry.')}
     }
   })
   orca.panels.handle('architect.overview',controller.overview)

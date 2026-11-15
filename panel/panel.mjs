@@ -94,7 +94,7 @@ $('project-form').addEventListener('submit',event=>{
 })
 $('reload').addEventListener('click',()=>{notice();void refresh()})
 $('stop').addEventListener('click',()=>act(async()=>{const result=await orca.plugin.request('architect.stop');await refresh();return result}))
-$('guide').addEventListener('click',event=>{event.preventDefault();void orca.host.call('shell.openExternal',{url:$('guide').href}).catch(error=>notice(error.message,true))})
+for(const link of document.querySelectorAll('[data-external]'))link.addEventListener('click',event=>{event.preventDefault();void orca.host.call('shell.openExternal',{url:link.href}).catch(error=>notice(error.message,true))})
 subscriptions.push(orca.plugin.on('architect.progress',data=>{if(state.busy)notice(data.message)}))
 for(const event of ['workspace.changed','workspace.created'])subscriptions.push(orca.on(event,()=>{if(!state.busy)void refresh()}))
 window.addEventListener('pagehide',()=>subscriptions.forEach(s=>s.dispose()))

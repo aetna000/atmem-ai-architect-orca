@@ -24,7 +24,7 @@ orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-## Local onboarding preview (0.2.0-local.2)
+## Local onboarding preview (0.2.0-local.3)
 
 This branch is a local preview; the public install command above still installs 0.1.5.
 
@@ -70,3 +70,5 @@ For live development, use `orca plugin dev load . --json` and review its approva
 AtMem-owned code: Apache-2.0. This is an AtMem integration, not an Orca-endorsed plugin.
 
 The HTML panel bundles DM Sans under its SIL Open Font License; see `assets/fonts/DM-Sans-OFL.txt`. Browser checks use Playwright Chromium.
+
+Start designing opens and explicitly focuses the project’s Orca browser tab at `http://localhost:<configured-port>/?project=<id>`. Footer links open https://atmem.ai and a mail draft addressed to info@atmem.ai.

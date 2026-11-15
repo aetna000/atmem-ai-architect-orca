@@ -37,6 +37,8 @@ try{
  const url=`http://127.0.0.1:${server.address().port}/panel/index.html`
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
+ assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
+ assert.equal(await page.getByRole('link',{name:'Contact us',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')
  assert.equal(await page.getByRole('button',{name:'Start designing',exact:true}).isDisabled(),true)
  await page.getByLabel('Project name',{exact:true}).fill('Support portal')
  await page.getByRole('button',{name:'Start designing',exact:true}).click()
