@@ -22,7 +22,7 @@ export const DOCUMENTS: Document[] = [
   {path:'README.md',label:'README'},
 ]
 export type Dependencies = {
-  probe: (url:string)=>Promise<'ready'|'offline'|'occupied'>
+  probe: (url:string)=>Promise<'ready'|'offline'|'occupied'|'outdated'>
   openBrowser:(url:string,workspaceId:string)=>Promise<void>
   closeTerminal:(terminalId:string)=>Promise<boolean>
   connectDesign?:(url:string,file:ProjectFile|undefined,id:string|undefined,name:string)=>Promise<string>
@@ -35,7 +35,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
   let opening:Promise<{message:string;workspaceId:string;projectId:string}>|undefined
   async function configuration() {
     const {settings}=await orca.host.call('settings.get',{})
-    const port=settings.port ?? 5174
+    const port=settings.port ?? 5176
     if(!Number.isInteger(port)||Number(port)<1024||Number(port)>65535)throw Error('Choose a port between 1024 and 65535 in plugin settings.')
     return {port:Number(port),url:`http://127.0.0.1:${port}`}
   }
@@ -82,9 +82,10 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       const ws=await workspace(input.workspaceId),config=await configuration()
       const state=await deps.probe(config.url)
       if(state==='ready')return {message:'Architect is running. Open Architect.'}
+      if(state==='outdated')throw Error('Stop the older Architect runtime, then reopen to update to 0.2.2.')
       if(state==='occupied')throw Error('That port serves another app. Change the Architect port in plugin settings.')
       if(await orca.storage.get('session'))throw Error('Stop the previous Architect terminal before restarting.')
-      const {terminalId}=await orca.host.call('terminal.create',{workspaceId:ws.id,title:'AtMem AI Architect',command:`npx --yes @atmem/architect@0.2.1 --no-open --port ${config.port}`})
+      const {terminalId}=await orca.host.call('terminal.create',{workspaceId:ws.id,title:'AtMem AI Architect',command:`npx --yes @atmem/architect@0.2.2 --no-open --port ${config.port}`})
       await orca.storage.set('session',{terminalId})
       return {message:'Starting in its terminal. When ready, open Architect.'}
     })()
@@ -125,11 +126,22 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       const linked=await orca.storage.get(key)
       const name=input.name?.trim()||ws.project||ws.name
       deps.progress?.('Starting Architect… First setup may take a few minutes.')
+      if(await deps.probe(url)==='outdated') {
+        if(!await orca.storage.get('session'))throw Error('Stop the older Architect runtime on this port, then retry to update to 0.2.2.')
+        deps.progress?.('Updating Architect… Your saved projects stay in place.')
+        await stop()
+        const closing=Date.now()+15000
+        while(await deps.probe(url)!=='offline'){
+          if(Date.now()>=closing)throw Error('The older runtime is still closing. Retry in a moment.')
+          await (deps.wait?.()||new Promise(r=>setTimeout(r,500)))
+        }
+      }
       if(await deps.probe(url)!=='ready'&&!await orca.storage.get('session'))await start({workspaceId:ws.id})
       const deadline=Date.now()+65000
       while(true) {
         const state=await deps.probe(url)
         if(state==='ready')break
+        if(state==='outdated')throw Error('Stop the older Architect runtime, then retry to update to 0.2.2.')
         if(state==='occupied')throw Error('Another app uses this port. Change Architect port under plugin settings, then retry.')
         if(Date.now()>=deadline)throw Error('Setup is still running. Wait, then retry. Open the Architect terminal if setup failed.')
         await (deps.wait?.()||new Promise(r=>setTimeout(r,1000)))

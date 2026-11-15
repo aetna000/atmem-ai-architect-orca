@@ -1,5 +1,5 @@
 export type Workspace = {id: string; name: string;updatedAt:number|null;dateKind:'opened'|'folder'}
-export type Overview = {workspaces: Workspace[]; url: string;owned:boolean;runtime:'ready'|'offline'|'occupied'}
+export type Overview = {workspaces: Workspace[]; url: string;owned:boolean;runtime:'ready'|'offline'|'occupied'|'outdated'}
 export type Action = {message: string;workspaceId?:string;projectId?:string}
 export type Document = {path: string; label: string}
 export {}

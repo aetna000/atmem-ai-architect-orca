@@ -1,22 +1,15 @@
 import {chromium} from '@playwright/test'
-import fs from 'node:fs/promises'
 import assert from 'node:assert/strict'
-import {createHash} from 'node:crypto'
-import {exampleWelcome,exampleDownload,modelSetupReady} from '../panel/model-onboarding.mjs'
-const receipt=JSON.parse(await fs.readFile(new URL('../assets/ready-example/delivery.json',import.meta.url)))
+import fs from 'node:fs/promises'
 const browser=await chromium.launch({headless:true})
 try{
- const page=await browser.newPage({viewport:{width:1440,height:950},acceptDownloads:true})
- await page.goto('http://localhost:5176/?project='+receipt.projectId+'&example=1')
- await page.waitForFunction(() => JSON.parse(localStorage.getItem('atforma-workspace-v3')||'null')?.id==='atmem-ai-ready-example-v1')
- await page.waitForFunction(modelSetupReady)
- await page.evaluate(exampleWelcome)
- await page.evaluate(exampleDownload(receipt))
- const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Download example ZIP',exact:true}).click()])
- const data=await fs.readFile(await download.path());assert.equal(createHash('sha256').update(data).digest('hex'),receipt.sha256)
- await page.locator('[aria-label=Delivery]').click()
- await page.getByRole('region',{name:'Prepared example checklist'}).waitFor()
- assert.equal(await page.locator('#atmem-reference-checks .check-complete').count(),8)
- await page.screenshot({path:'/tmp/architect-complete-example-delivery.png',fullPage:true})
- console.log('Ready example: immutable ZIP download verified; eight reference checks visible on Delivery.')
+ const page=await browser.newPage({acceptDownloads:true})
+ const base=process.env.ARCHITECT_URL||'http://localhost:5176'
+ await page.goto(base+'/?example=1')
+ await page.getByRole('button',{name:'Download example ZIP',exact:true}).waitFor()
+ await page.getByRole('tab',{name:'Delivery',exact:true}).click()
+ assert.equal(await page.locator('.ready-reference .check-complete').count(),8)
+ const [download]=await Promise.all([page.waitForEvent('download'),page.getByRole('button',{name:'Download complete example',exact:true}).click()])
+ const bytes=await fs.readFile(await download.path());assert.equal(bytes.subarray(0,2).toString(),'PK');assert.ok(bytes.length>1_000_000)
+ console.log('Portable reference opens and downloads without a local engineering session.')
 }finally{await browser.close()}

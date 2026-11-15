@@ -45,10 +45,10 @@ function render(){
   button.addEventListener('click',()=>act(()=>orca.plugin.request('architect.document',{workspaceId:state.selected,path:file.path})))
   return button
  }))
- $('runtime-label').textContent=state.loading&&!state.url?'Checking runtime…':state.runtime==='ready'?'Running locally':state.runtime==='occupied'?'Port unavailable':'Not running'
+ $('runtime-label').textContent=state.loading&&!state.url?'Checking runtime…':state.runtime==='ready'?'Running locally':state.runtime==='occupied'?'Port unavailable':state.runtime==='outdated'?'Update ready':'Not running'
  $('runtime-dot').className='dot '+state.runtime
  $('address').textContent=state.url.replace(/^http:\/\//,'')
- $('stop').hidden=!state.owned;$('stop').textContent=state.runtime==='ready'?'Stop':'Reset';$('stop').disabled=state.busy
+ $('stop').hidden=!state.owned;$('stop').textContent=state.runtime==='ready'||state.runtime==='outdated'?'Stop':'Reset';$('stop').disabled=state.busy
  $('reload').disabled=state.busy||state.loading
 }
 async function refresh(){

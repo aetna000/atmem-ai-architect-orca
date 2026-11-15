@@ -4,7 +4,7 @@
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
   "version": "0.2.0",
-  "description": "Turn an idea into an architecture and project files. Start a named design or reopen a folder\u2019s saved design inside Orca. Contact: hello@atmem.ai.",
+  "description": "Explore a complete AI project, create your own design and download project files inside Orca. Contact: hello@atmem.ai.",
   "author": {
     "name": "AtMem",
     "url": "https://atmem.ai"
@@ -33,7 +33,7 @@
         "title": "Architect port",
         "description": "Local Architect port. Restart its terminal after changing this.",
         "type": "integer",
-        "default": 5174,
+        "default": 5176,
         "minimum": 1024,
         "maximum": 65535
       }

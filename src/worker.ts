@@ -2,20 +2,23 @@ import type {OrcaWorkerApi} from 'orca/worker'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
 import {createController} from './controller'
-import {mkdir, mkdtemp, realpath, readFile} from 'node:fs/promises'
+import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
-import {boardReset} from '../panel/board-reset.mjs'
-import {modelSetupReady,openModelSetup,embeddedLayout,exampleWelcome,exampleDownload} from '../panel/model-onboarding.mjs'
+import {modelSetupReady,openModelSetup} from '../panel/model-onboarding.mjs'
 const run=promisify(execFile)
-export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
+export async function probe(url:string):Promise<'ready'|'offline'|'occupied'|'outdated'> {
   try {
     const response=await fetch(url,{signal:AbortSignal.timeout(1800),redirect:'error'})
     const reader=response.body?.getReader()
     if(!reader)return 'occupied'
     let text='',bytes=0
     try{while(true){const {value,done}=await reader.read();if(done)break;bytes+=value.length;if(bytes>65536)return 'occupied';text+=new TextDecoder().decode(value)}}finally{await reader.cancel()}
-    return response.ok&&text.includes('<title>AtMem.ai | AI Architect</title>')?'ready':'occupied'
+    if(!response.ok||!text.includes('<title>AtMem.ai | AI Architect</title>'))return 'occupied'
+    const example=await fetch(url+'/reference-example.zip',{signal:AbortSignal.timeout(3000),redirect:'error'})
+    const content=example.body?.getReader();if(!content)return 'outdated'
+    try{const first=await content.read();return example.ok&&first.value?.[0]===80&&first.value?.[1]===75?'ready':'outdated'}finally{await content.cancel()}
+
   }catch(error){return (error as {cause?:{code?:string}}).cause?.code==='ECONNREFUSED'?'offline':'occupied'}
 }
 export default function activate(orca:OrcaWorkerApi) {
@@ -58,16 +61,9 @@ export default function activate(orca:OrcaWorkerApi) {
       try {
         const ready=await run('orca',['wait','--environment','local','--page',pageId,'--fn',modelSetupReady,'--timeout','10000','--json'],{timeout:12000,maxBuffer:1048576})
         if(!JSON.parse(ready.stdout).ok)throw Error('Project has not finished loading.')
-        const layout=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',embeddedLayout,'--json'],{timeout:10000,maxBuffer:1048576})
-        if(!JSON.parse(layout.stdout).ok)throw Error('Embedded layout could not load.')
-        const reset=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',boardReset,'--json'],{timeout:10000,maxBuffer:1048576})
-        if(!JSON.parse(reset.stdout).ok)throw Error('Reset control could not load.')
-        const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',address.searchParams.get('example')==='1'?exampleWelcome:openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
-        if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
-        if(address.searchParams.get('example')==='1') {
-          const receipt=JSON.parse(await readFile(new URL('../assets/ready-example/delivery.json',import.meta.url),'utf8'))
-          const download=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',exampleDownload(receipt),'--json'],{timeout:10000,maxBuffer:1048576})
-          if(!JSON.parse(download.stdout).ok)throw Error('Example download could not load.')
+        if(address.searchParams.get('example')!=='1') {
+          const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
+          if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
         }
       }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}
     }

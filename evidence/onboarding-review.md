@@ -93,3 +93,12 @@ Removed the initial schematic image and review caption at the owner’s request.
 Start opens versioned `atmem-ai-ready-example-v1` with region/model/usage decisions and a complete 22-line AWS price worksheet (all nine non-note components accounted for). Original source templates remain intact. Official catalog snapshots, extracted meters and assumptions are retained. A real completed native engineering session captured a 17 MB immutable package containing generated source, prebuilt runtime ZIP, documentation and qualification logs. Capture itself is not acceptance.
 
 Verified: 13 application/source-contract tests, Terraform schema validation, two AWS mock plans, 12 plugin tests, 10 panel browser checks. ZIP CRC, runtime inclusion and every retained qualification file hash checked. Prepared checklist explicitly labels external local evidence and is separate from current project checks. Template previews removed. No cloud deployment or real tenant integration run. Local backend download binding must be re-created for a different installation.
+
+
+## Public 0.2.0 release
+
+Owner authorized publication of all latest changes. Architect 0.2.2 now owns the native compact composer/header, top introduction and voice controls, retractable introduction, idle sizing, fresh-context reset and complete reference download. The plugin no longer injects those features or depends on an engineering session from this machine. Its default port is 5176; existing configured ports remain respected. The sample design is still imported through the authenticated API, preserving saved edits. Runtime pin: @atmem/architect@0.2.2. Local-session receipts and duplicate built ZIPs were removed from the plugin distribution; the public runtime serves the immutable portable example.
+
+Plugin checks: TypeScript, 14 worker/bridge/template/runtime tests and 10 panel browser checks pass. Native runtime checks and portability evidence are retained in Architect's specs/031-first-use-release. Cloud deployment and real tenant integration remain not run.
+
+A portable-runtime probe distinguishes old Architect from a current runtime. Only a plugin-recorded terminal may be restarted automatically; independent instances receive an actionable upgrade message.
