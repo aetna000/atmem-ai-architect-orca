@@ -39,7 +39,7 @@ Nine worker/project regression tests, TypeScript and manifest/native validation 
 
 ## Focus and contact links — local.3
 
-Start now opens the configured local URL using `localhost`, then explicitly switches to the returned browser page with `--focus`. Live testing confirmed the active Orca tab was `http://localhost:5176/?project=<id>`, loaded without error, and showed the existing “my first project” name. The internal authenticated project API continues using its canonical loopback URL so existing associations are preserved. Added https://atmem.ai and mailto:info@atmem.ai footer links using Orca’s user-gesture external-link API. Nine regression tests, five browser checks (including link destinations), TypeScript and manifest validation pass. No capabilities changed.
+Start now opens the configured local URL using `localhost`, then explicitly switches to the returned browser page with `--focus`. Live testing confirmed the active Orca tab was `http://localhost:5176/?project=<id>`, loaded without error, and showed the existing “my first project” name. The internal authenticated project API continues using its canonical loopback URL so existing associations are preserved. Added https://atmem.ai and mailto:hello@atmem.ai footer links using Orca’s user-gesture external-link API. Nine regression tests, five browser checks (including link destinations), TypeScript and manifest validation pass. No capabilities changed.
 
 ## Model setup and smaller typography — local.4
 

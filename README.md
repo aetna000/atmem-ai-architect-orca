@@ -6,7 +6,7 @@ Open AtMem AI Architect’s visual workspace inside Orca. Design applications, r
 
 [Explore the workspace](assets/architect-workspace.png) · [See Terraform in Orca](assets/terraform-orca.png)
 
-[Public Orca listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca)
+[Public Orca listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca) · [Contact us: hello@atmem.ai](mailto:hello@atmem.ai)
 
 ## Watch the walkthrough
 
