@@ -24,7 +24,7 @@ orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-## Local onboarding preview (0.2.0-local.5)
+## Local onboarding preview (0.2.0-local.6)
 
 This branch is a local preview; the public install command above still installs 0.1.5.
 

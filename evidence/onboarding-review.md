@@ -54,3 +54,7 @@ Folder entries now include local date/time and sort descending by recorded succe
 The reported typing failure reproduced at 893×738: the enabled textarea was below the viewport (top 928px) because Architect’s <=900px stacked layout made the document taller than the Orca pane. A plugin-owned, media-scoped stylesheet now bounds the embedded grid and keeps the chat composer inside the pane, with scrolling inside the conversation. Existing deployed/generated artifacts and npm package files are unchanged. The same compatibility adjustment is applied on every plugin open. Existing tabs acquire it when reopened; reloading a tab directly bypasses the plugin’s page setup.
 
 Live isolated-browser checks typed an unsent draft against the public saved sample at widths 893/560/400/1200 and confirmed both message and Send rectangles fit the viewport. Draft cleared; no prompt sent. The reported live tab was also corrected in place, and its textarea bottom measured 627px in a 738px viewport. Ten worker/project tests, six panel browser checks, and the live embedded-layout check pass. The adapter depends on the pinned Architect DOM/CSS contracts; no global app release is claimed.
+
+## Required project name — local.6
+
+The empty-name action now reads “Enter a project name” and uses a neutral disabled style. Entering a nonblank name changes it to the enabled pink “Start designing” action. Six panel/browser checks pass and the installed native panel capture settled without errors.
