@@ -8,7 +8,7 @@ async function fixture(run:(c:ReturnType<typeof createController>,host:ReturnTyp
  const root=await mkdtemp(join(tmpdir(),'architect-orca-'))
  const host=mockHost({capabilities,results:{'workspace.list':{workspaces:[{id:'local-1',kind:'folder',name:'Example',path:root,branch:null,hostId:'local'},{id:'remote',kind:'folder',name:'Remote',path:'/remote',branch:null,hostId:'ssh:other'}],truncated:false},'settings.get':{settings:{port:5174}},'terminal.create':{terminalId:'owned-terminal'},'terminal.sendText':{accepted:true},'workspace.open':{opened:true},'editor.open':{opened:true}}})
  let c:ReturnType<typeof createController>
- const module={default(orca:any){c=createController(orca,{probe:async()=>probe,openBrowser:async()=>{},closeTerminal:async id=>{assert.equal(id,'owned-terminal');return true}})}}
+ const module={default(orca:any){c=createController(orca,{probe:async()=>probe,openBrowser:async url=>{assert.match(url,/\/\?project=linked-project$/)},connectDesign:async(url,file,id,name)=>'linked-project',closeTerminal:async id=>{assert.equal(id,'owned-terminal');return true}})}}
  const worker=await mountWorker(module,{host})
  try{await run(c!,host,root);assert.deepEqual(worker.refusals,[])}finally{await worker.deactivate();await rm(root,{recursive:true,force:true})}
 }
@@ -45,3 +45,21 @@ test('rejects invalid ports before a terminal command can be built',()=>fixture(
  await assert.rejects(()=>c.start({workspaceId:'local-1'}),/Choose a port/)
  assert.equal(host.callsOf('terminal.create').length,0)
 }))
+test('one Open action starts the service, waits for readiness and links the selected project',async()=>{
+ const root=await mkdtemp(join(tmpdir(),'architect-launch-'))
+ const file={format:'atmem.ai-architect.project',formatVersion:'2.3.0',meta:{id:'selected-project',name:'Selected design',revision:1},design:{provider:'tools',nodes:[],edges:[]}}
+ await writeFile(join(root,'project.atmem-ai-architect.json'),JSON.stringify(file))
+ const host=mockHost({capabilities,results:{'workspace.list':{workspaces:[{id:'local-1',kind:'folder',name:'Folder',path:root,branch:null,hostId:'local'}],truncated:false},'settings.get':{settings:{port:5174}},'terminal.create':{terminalId:'test-terminal'},'workspace.open':{opened:true}}})
+ let c:ReturnType<typeof createController>,ready=false,waits=0,browser=''
+ const worker=await mountWorker({default(orca:any){c=createController(orca,{
+  probe:async()=>ready?'ready':'offline',wait:async()=>{waits++;ready=true},closeTerminal:async()=>true,
+  connectDesign:async(url,actual)=>{assert.deepEqual(actual,file);return file.meta.id},openBrowser:async url=>{browser=url},
+ })}},{host})
+ try {
+  await c!.open({workspaceId:'local-1'})
+  assert.equal(host.callsOf('terminal.create').length,1);assert.equal(waits,1)
+  assert.equal(browser,'http://127.0.0.1:5174/?project=selected-project')
+  await c!.open({workspaceId:'local-1'})
+  assert.equal(host.callsOf('terminal.create').length,1)
+ }finally{await worker.deactivate();await rm(root,{recursive:true,force:true})}
+})

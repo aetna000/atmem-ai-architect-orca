@@ -2,6 +2,9 @@ import type {OrcaWorkerApi} from 'orca/worker'
 import {lstat, realpath} from 'node:fs/promises'
 import {resolve, relative, sep} from 'node:path'
 import type {Document} from './protocol'
+import {createHash} from 'node:crypto'
+import {designSources, readDesign, connectDesign} from './project-bridge'
+import type {ProjectFile} from './project-bridge'
 
 export const DOCUMENTS: Document[] = [
   {path:'START_HERE.md',label:'Start here'},
@@ -21,9 +24,14 @@ export type Dependencies = {
   probe: (url:string)=>Promise<'ready'|'offline'|'occupied'>
   openBrowser:(url:string,workspaceId:string)=>Promise<void>
   closeTerminal:(terminalId:string)=>Promise<boolean>
+  connectDesign?:(url:string,file:ProjectFile|undefined,id:string|undefined,name:string)=>Promise<string>
+  createWorkspace?:(name:string)=>Promise<string>
+  progress?:(message:string)=>void
+  wait?:()=>Promise<void>
 }
 export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
   let starting:Promise<{message:string}>|undefined
+  let opening:Promise<{message:string;workspaceId:string;projectId:string}>|undefined
   async function configuration() {
     const {settings}=await orca.host.call('settings.get',{})
     const port=settings.port ?? 5174
@@ -53,7 +61,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     if(rel==='..'||rel.startsWith('..'+sep)||!(await lstat(target)).isFile())throw Error('Choose a regular project document.')
     return {ws,path}
   }
-  const overview=async()=>({workspaces:(await workspaces()).map(({id,name,project,path})=>{const label=project||path.split(/[\\/]/).filter(Boolean).at(-1);return {id,name:label===name?name:`${label} · ${name}`}}),url:(await configuration()).url})
+  const overview=async()=>({workspaces:(await workspaces()).map(({id,name,project,path})=>{const label=project||path.split(/[\\/]/).filter(Boolean).at(-1);return {id,name:label===name?name:`${label} · ${name}`}}),url:(await configuration()).url,owned:!!(await orca.storage.get('session'))})
   const start=async(input:{workspaceId:string})=>{
     if(starting)return starting
     starting=(async()=>{
@@ -75,19 +83,53 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     await orca.storage.delete('session')
     return {message:closed?'Architect terminal closed.':'Architect terminal is already closed.'}
   }
-  const open=async(input:{workspaceId:string})=>{
-    const ws=await workspace(input.workspaceId),{url}=await configuration()
-    const state=await deps.probe(url)
-    if(state!=='ready')throw Error(state==='occupied'?'That port serves another app. Change the Architect port.':'Architect is not ready. Check its terminal, then try again.')
-    await orca.host.call('workspace.open',{workspaceId:ws.id})
-    await deps.openBrowser(url,ws.id)
-    return {message:'Opened Architect in Orca. Delivery → Open in Orca returns the project files.'}
+  const open=async(input:{workspaceId?:string;name?:string;source?:string})=>{
+    if(opening)throw Error('A design is already opening. Wait for it to finish.')
+    opening=(async()=>{
+      let workspaceId=input.workspaceId
+      if(!workspaceId) {
+        const name=input.name?.trim()
+        if(!name||name.length>100)throw Error('Name your project using 1–100 characters.')
+        if(!deps.createWorkspace)throw Error('Open a local folder in Orca first.')
+        const draftKey='new-'+createHash('sha256').update(name).digest('hex')
+        const previous=await orca.storage.get(draftKey)
+        const available=await workspaces()
+        workspaceId=typeof previous==='string'&&available.some(w=>w.id===previous)?previous:await deps.createWorkspace(name)
+        await orca.storage.set(draftKey,workspaceId)
+      }
+      const ws=await workspace(workspaceId),{url}=await configuration(),sources=await designSources(ws.path)
+      const source=input.source||(sources.length===1?sources[0].path:undefined)
+      if(!source&&sources.length>1)throw Error('Choose which saved design to open.')
+      if(source&&!sources.some(s=>s.path===source))throw Error('Design file is no longer available. Refresh folders.')
+      // Validate the selected file before starting or opening anything.
+      const file=source?await readDesign(ws.path,source):undefined
+      const key='design-'+createHash('sha256').update(url+'\n'+await realpath(ws.path)+'\n'+(source||'blank')).digest('hex')
+      const linked=await orca.storage.get(key)
+      const name=input.name?.trim()||ws.project||ws.name
+      deps.progress?.('Starting Architect… First setup may take a few minutes.')
+      if(await deps.probe(url)!=='ready'&&!await orca.storage.get('session'))await start({workspaceId:ws.id})
+      const deadline=Date.now()+65000
+      while(true) {
+        const state=await deps.probe(url)
+        if(state==='ready')break
+        if(state==='occupied')throw Error('Another app uses this port. Change Architect port under plugin settings, then retry.')
+        if(Date.now()>=deadline)throw Error('Setup is still running. Wait, then retry. Open the Architect terminal if setup failed.')
+        await (deps.wait?.()||new Promise(r=>setTimeout(r,1000)))
+      }
+      deps.progress?.('Loading your design…')
+      const projectId=await (deps.connectDesign||connectDesign)(url,file,typeof linked==='string'?linked:undefined,name)
+      await orca.storage.set(key,projectId)
+      await orca.host.call('workspace.open',{workspaceId:ws.id})
+      await deps.openBrowser(url+'/?project='+encodeURIComponent(projectId),ws.id)
+      return {message:file||linked?'Your design is open. Continue in the Architect tab.':'Your blank design is open. Describe what you want to build.',workspaceId:ws.id,projectId}
+    })()
+    try{return await opening}finally{opening=undefined}
   }
   const documents=async(input:{workspaceId:string})=>{
     await workspace(input.workspaceId)
     const documents:Document[]=[]
     for(const doc of DOCUMENTS){try{await safeDocument(input.workspaceId,doc.path);documents.push(doc)}catch(error){if((error as {code?:string}).code==='EACCES')throw error}}
-    return {documents}
+    return {documents,designs:await designSources((await workspace(input.workspaceId)).path)}
   }
   const document=async(input:{workspaceId:string;path:string})=>{
     const {ws,path}=await safeDocument(input.workspaceId,input.path)

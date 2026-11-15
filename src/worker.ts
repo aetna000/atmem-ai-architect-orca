@@ -2,6 +2,9 @@ import type {OrcaWorkerApi} from 'orca/worker'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
 import {createController} from './controller'
+import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
+import {homedir} from 'node:os'
+import {join} from 'node:path'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
   try {
@@ -16,6 +19,17 @@ export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
 export default function activate(orca:OrcaWorkerApi) {
   const controller=createController(orca,{
     probe,
+    progress:message=>orca.panels.post('architect.progress',{message}),
+    createWorkspace:async name=>{
+      const parent=join(homedir(),'.atmem-architect','orca-projects')
+      await mkdir(parent,{recursive:true,mode:0o700})
+      const path=await realpath(await mkdtemp(join(parent,name.replace(/[^a-zA-Z0-9-]/g,'-').slice(0,50)+'-')))
+      await run('orca',['repo','add','--environment','local','--path',path,'--kind','folder','--json'],{timeout:20000,maxBuffer:1048576})
+      const {workspaces}=await orca.host.call('workspace.list',{})
+      const ws=workspaces.find(w=>w.path===path&&(w.hostId===null||w.hostId==='local'))
+      if(!ws)throw Error('Folder created. Refresh folders and select it to continue.')
+      return ws.id
+    },
     closeTerminal:async terminalId=>{
       const {stdout}=await run('orca',['terminal','list','--environment','local','--json'],{timeout:15000,maxBuffer:2097152})
       const response=JSON.parse(stdout)
