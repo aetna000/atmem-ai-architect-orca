@@ -24,14 +24,14 @@ orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
 
 Orca prints the exact permissions and approval command. Review those before approving.
 
-## Local onboarding preview (0.2.0-local.7)
+## Local onboarding preview (0.2.0-local.8)
 
 This branch is a local preview; the public install command above still installs 0.1.5.
 
 1. Open **AtMem AI Architect** in Orca’s right sidebar.
 2. For a new idea, enter a project name and choose **Start designing**. No existing folder is required.
 3. Architect starts if needed and opens the named design in an Orca browser tab. Model setup opens automatically if no model is connected.
-4. To resume existing work, choose **Existing folder**, select its Orca folder, and choose **Open design in Architect**.
+4. To resume existing work, choose **Open folder**, select its Orca folder, and choose **Open design in Architect**.
 5. In Architect, choose **Delivery → Open in Orca**. The panel detects newly registered design folders while open; **Reload folders and files** is the fallback.
 
 A folder’s root or `design-documents/` can contain `*.atmem-ai-architect.json` or `*.atforma.json`. Choose a file when several exist. A folder without a saved design starts a named blank design; existing source code is not imported. Invalid designs are reported rather than replaced with a blank canvas.
@@ -75,4 +75,4 @@ Start designing opens and explicitly focuses the project’s Orca browser tab at
 
 Folder choices are sorted newest first and show local date/time: “Opened” for a recorded successful plugin open, otherwise “Updated” from the folder timestamp. Unavailable dates sort last. The plugin supplies a narrow-pane layout adjustment to keep Architect’s composer and Send control visible.
 
-Choose **Templates** or **Start from template** to preview Private file storage, Document processing, or Knowledge assistant. Each uses a public AWS sample. **Use this template** creates an independent design with a new project ID; review the example’s requirements and assumptions before adapting it. Project opening closes the plugin sidebar to give Architect room. Reopen the plugin from Orca’s right sidebar when needed.
+Choose **Templates** to preview Private file storage, Document processing, or Knowledge assistant. Each uses a public AWS sample. **Use this template** creates an independent design with a new project ID; review the example’s requirements and assumptions before adapting it. Project opening closes the plugin sidebar to give Architect room. Reopen the plugin from Orca’s right sidebar when needed.

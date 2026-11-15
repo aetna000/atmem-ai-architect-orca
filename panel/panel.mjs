@@ -19,7 +19,7 @@ function render(){
   $(id).setAttribute('aria-selected',String(active));$(id).tabIndex=active?0:-1;$(id).disabled=state.busy
  }
  $('new-fields').hidden=existing;$('folder-fields').hidden=!existing
- $('template-fields').hidden=state.mode!=='template';$('browse-templates').hidden=state.mode!=='new'||state.opened;$('browse-templates').disabled=state.busy
+ $('template-fields').hidden=state.mode!=='template'
  const chosen=templates.find(t=>t.id===state.template)
  $('template-preview').src=chosen.preview;$('template-preview').alt=chosen.title+' sample architecture preview';$('template-description').textContent=chosen.description
  for(const button of document.querySelectorAll('[data-template]')){button.setAttribute('aria-pressed',String(button.dataset.template===state.template));button.disabled=state.busy}
@@ -86,7 +86,6 @@ for(const template of templates){
  button.addEventListener('click',()=>{state.template=template.id;$('project-name').value=template.title;render()});$('template-list').append(button)
 }
 $('template-tab').addEventListener('click',()=>chooseMode('template'))
-$('browse-templates').addEventListener('click',()=>chooseMode('template'))
 $('new-tab').addEventListener('click',()=>chooseMode('new'))
 $('folder-tab').addEventListener('click',()=>chooseMode('folder'))
 document.querySelector('.switcher').addEventListener('keydown',event=>{

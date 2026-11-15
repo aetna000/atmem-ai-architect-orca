@@ -50,16 +50,16 @@ try{
  await page.getByRole('button',{name:'Stop',exact:true}).click();await page.getByText('Not running',{exact:true}).waitFor()
  assert.equal(await page.getByRole('button',{name:'Stop',exact:true}).count(),0);checks++
  await page.getByRole('tab',{name:'New project',exact:true}).click()
- await page.getByRole('tab',{name:'Existing folder',exact:true}).focus();await page.keyboard.press('ArrowLeft')
+ await page.getByRole('tab',{name:'Open folder',exact:true}).focus();await page.keyboard.press('ArrowLeft')
  assert.equal(await page.getByRole('tab',{name:'Templates',exact:true}).getAttribute('aria-selected'),'true');await page.keyboard.press('Home');checks++
  await page.evaluate(()=>{window.fixture.fail=true;window.fixture.designs=[{path:'one.atforma.json',name:'Design one'},{path:'two.atforma.json',name:'Design two'}]})
  await page.getByRole('button',{name:'Reload folders',exact:true}).click()
- await page.getByRole('tab',{name:'Existing folder',exact:true}).click()
+ await page.getByRole('tab',{name:'Open folder',exact:true}).click()
  await page.getByLabel('Saved design',{exact:true}).selectOption('two.atforma.json')
  await page.getByRole('button',{name:'Open design in Architect',exact:true}).click()
  await page.getByRole('alert').filter({hasText:'invalid JSON'}).waitFor();checks++
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
- await page.getByRole('button',{name:'Start from template',exact:true}).click()
+ await page.getByRole('tab',{name:'Templates',exact:true}).click()
  await page.getByRole('button',{name:/Knowledge assistant/}).click()
  assert.equal(await page.getByLabel('Project name',{exact:true}).inputValue(),'Knowledge assistant')
  assert.equal(await page.locator('#template-preview').getAttribute('src'),'../assets/templates/knowledge-assistant.svg')

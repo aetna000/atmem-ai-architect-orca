@@ -66,3 +66,7 @@ Expanded the current Orca workspace by hiding its sidebars; the app viewport inc
 Added a Templates tab and Start from template entry with three bundled public AWS examples: Private file storage (2 components), Document processing (6), and Knowledge assistant (10). Users see a schematic preview and scope description before naming an independent project. Copies have new IDs/timestamps and template provenance; retry associations distinguish different templates with the same name. Unrecognized template IDs and mixing a template with an existing workspace are rejected. These are synthetic sample designs requiring review, not deployed systems.
 
 Eleven worker/project tests and seven browser checks pass. All three copied templates independently pass the pinned Architect project reader. Live worker testing created “Knowledge assistant example” and the real Orca browser showed all 10 components at 1469px width. Browser preview decoding and template selection/request are checked. No model prompts or cloud operations were performed. Capabilities unchanged.
+
+## Entry layout cleanup — local.8
+
+Removed the duplicate Start from template button; Templates remains in the main tabs. Shortened the folder tab to Open folder, prevented label wrapping and reduced tab padding/type. Reset browser-default button chrome. Seven browser checks pass; actual installed 360px native capture inspected with no render errors.
