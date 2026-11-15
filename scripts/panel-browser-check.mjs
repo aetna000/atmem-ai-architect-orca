@@ -21,7 +21,7 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message))
  await page.addInitScript(()=>{
   const listeners={}
-  window.fixture={runtime:'ready',owned:true,projects:[{id:'example',name:'Support assistant'}],calls:[],fail:false,designs:[]}
+  window.fixture={runtime:'ready',owned:true,projects:[{id:'example',name:'Support assistant',updatedAt:1794700000000,dateKind:'opened'}],calls:[],fail:false,designs:[]}
   window.orca={plugin:{on:(name,fn)=>{listeners[name]=fn;return {dispose(){}}},request:async(name,input)=>{
    const f=window.fixture;f.calls.push({name,input})
    if(name==='architect.overview')return {workspaces:f.projects,url:'http://127.0.0.1:5176',owned:f.owned,runtime:f.runtime}
@@ -37,6 +37,7 @@ try{
  })
  const url=`http://127.0.0.1:${server.address().port}/panel/index.html`
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ assert.match(await page.locator('#folder option').nth(1).textContent(),/Support assistant.*Opened.*2026/)
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
  assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
  assert.equal(await page.getByRole('link',{name:'Contact us',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')

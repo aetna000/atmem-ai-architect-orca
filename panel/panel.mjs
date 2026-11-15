@@ -3,8 +3,13 @@ const state={projects:[],selected:'',designs:[],files:[],source:'',mode:'new',op
 let refreshNumber=0
 const subscriptions=[]
 function notice(text='',error=false){$('failure').hidden=!error||!text;$('failure').textContent=error?text:'';$('progress').hidden=error||!text;$('progress').textContent=error?'':text}
+function folderDate(item){
+ if(!item.updatedAt)return 'Date unavailable'
+ const date=new Date(item.updatedAt)
+ return (item.dateKind==='opened'?'Opened ':'Updated ')+new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(date)
+}
 function options(id,items,selected,placeholder){
- const select=$(id);select.replaceChildren(new Option(placeholder,''),...items.map(item=>new Option(item.name,item.id)))
+ const select=$(id);select.replaceChildren(new Option(placeholder,''),...items.map(item=>new Option(id==='folder'?item.name+' · '+folderDate(item):item.name,item.id)))
  select.value=selected
 }
 function render(){

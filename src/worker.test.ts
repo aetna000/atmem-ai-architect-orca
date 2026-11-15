@@ -1,5 +1,5 @@
 import {assert,mockHost,mountWorker,test} from 'orca/testing'
-import {mkdtemp,writeFile,mkdir,symlink,rm} from 'node:fs/promises'
+import {mkdtemp,writeFile,mkdir,symlink,rm,utimes} from 'node:fs/promises'
 import {tmpdir} from 'node:os'
 import {join} from 'node:path'
 import {createController} from './controller'
@@ -63,3 +63,21 @@ test('one Open action starts the service, waits for readiness and links the sele
   assert.equal(host.callsOf('terminal.create').length,1)
  }finally{await worker.deactivate();await rm(root,{recursive:true,force:true})}
 })
+
+test('lists newest folders first with dates and remembers the latest successful open',()=>fixture(async(c,host,root)=>{
+ const recent=join(root,'recent');await mkdir(recent)
+ const older=new Date('2026-01-01T00:00:00Z'),newer=new Date('2026-11-14T00:00:00Z')
+ await utimes(root,older,older);await utimes(recent,newer,newer)
+ host.respond('workspace.list',{workspaces:[
+  {id:'local-1',kind:'folder',name:'Older',path:root,branch:null,hostId:'local'},
+  {id:'recent',kind:'folder',name:'Recent',path:recent,branch:null,hostId:'local'},
+  {id:'missing',kind:'folder',name:'Unavailable',path:join(root,'missing'),branch:null,hostId:'local'},
+ ],truncated:false})
+ let list=(await c.overview()).workspaces
+ assert.deepEqual(list.map(w=>w.id),['recent','local-1','missing'])
+ assert.equal(list[0].updatedAt,newer.getTime());assert.equal(list[2].updatedAt,null)
+ await c.open({workspaceId:'local-1'})
+ list=(await c.overview()).workspaces
+ assert.equal(list[0].id,'local-1');assert.equal(list[0].dateKind,'opened')
+ assert.ok((list[0].updatedAt??0)>newer.getTime())
+},'ready'))

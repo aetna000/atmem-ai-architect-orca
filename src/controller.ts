@@ -63,7 +63,17 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
   }
   const overview=async()=>{
     const {url}=await configuration()
-    return {workspaces:(await workspaces()).map(({id,name,project,path})=>{const label=project||path.split(/[\\/]/).filter(Boolean).at(-1);return {id,name:label===name?name:`${label} · ${name}`}}),url,owned:!!(await orca.storage.get('session')),runtime:await deps.probe(url)}
+    const entries=await Promise.all((await workspaces()).map(async({id,name,project,path})=>{
+      const label=project||path.split(/[\\/]/).filter(Boolean).at(-1)
+      const key='workspace-meta-'+createHash('sha256').update(resolve(path)).digest('hex')
+      const saved=await orca.storage.get(key) as {openedAt?:number;name?:string}|null
+      let modified:number|null=null
+      try{const stat=await lstat(path);modified=stat.mtimeMs}catch{/* Keep unavailable folders visible. */}
+      const opened=typeof saved?.openedAt==='number'&&Number.isFinite(saved.openedAt)?saved.openedAt:null
+      return {id,name:saved?.name||(label===name?name:`${label} · ${name}`),updatedAt:opened??modified,dateKind:opened?'opened' as const:'folder' as const}
+    }))
+    entries.sort((a,b)=>(b.updatedAt??0)-(a.updatedAt??0)||a.name.localeCompare(b.name)||a.id.localeCompare(b.id))
+    return {workspaces:entries,url,owned:!!(await orca.storage.get('session')),runtime:await deps.probe(url)}
   }
   const start=async(input:{workspaceId:string})=>{
     if(starting)return starting
@@ -124,6 +134,10 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       await orca.storage.set(key,projectId)
       await orca.host.call('workspace.open',{workspaceId:ws.id})
       await deps.openBrowser(url+'/?project='+encodeURIComponent(projectId),ws.id)
+      const metadataKey='workspace-meta-'+createHash('sha256').update(resolve(ws.path)).digest('hex')
+      const metadata=await orca.storage.get(metadataKey) as {name?:string}|null
+      const displayName=input.name?.trim()||file?.meta.name||metadata?.name
+      await orca.storage.set(metadataKey,{openedAt:Date.now(),...(displayName?{name:displayName}:{})})
       return {message:file||linked?'Your design is open. Continue in the Architect tab.':'Your blank design is open. Describe what you want to build.',workspaceId:ws.id,projectId}
     })()
     try{return await opening}finally{opening=undefined}
