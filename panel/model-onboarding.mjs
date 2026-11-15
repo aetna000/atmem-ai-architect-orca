@@ -41,6 +41,23 @@ export const embeddedLayout = `(() => {
   };
   if(!window.__atmemIntroCollapseV2){window.__atmemIntroCollapseV2=true;new MutationObserver(collapseIntroduction).observe(document.body,{childList:true,subtree:true});}
   collapseIntroduction();
+  style.textContent += '.atmem-top-utilities [hidden]{display:none!important}.atmem-top-utilities{display:inline-flex;align-items:center;gap:4px;order:3;margin-left:auto}.chat-head .atmem-top-utilities button{font-size:11px;line-height:18px;min-height:26px;padding:3px 6px;border:0;background:transparent;color:var(--ink-2)}.chat.atmem-utilities-ready .atmem-intro-toggle,.chat.atmem-utilities-ready>.voice-status>button[aria-label="Voice settings"]{display:none!important}.chat.atmem-utilities-ready>.voice-status:has(>button[aria-label="Voice settings"]):not(:has(>span,>button:not([aria-label="Voice settings"]))){display:none}.chat.atmem-utilities-ready.atmem-chat-idle>.messages{display:none}.chat.atmem-utilities-ready .msg.atmem-intro-collapsed{padding:0!important}';
+  const topUtilities=()=>{
+    const chat=document.querySelector('.app>.chat'),head=chat?.querySelector('.chat-head');if(!head)return;
+    let host=head.querySelector('.atmem-top-utilities');
+    if(!host){
+      host=document.createElement('span');host.className='atmem-top-utilities';
+      const intro=document.createElement('button');intro.type='button';intro.className='atmem-top-intro';intro.title='Expand or collapse the Architect introduction';intro.onclick=()=>chat.querySelector('.atmem-intro-toggle')?.click();
+      const voice=document.createElement('button');voice.type='button';voice.className='atmem-top-voice';voice.setAttribute('aria-label','Voice settings');voice.title='Voice settings';voice.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m11 5-6 4H2v6h3l6 4V5Z"/><path d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></svg>';voice.onclick=()=>chat.querySelector('.voice-status>button[aria-label="Voice settings"]')?.click();
+      host.append(intro,voice);head.append(host);
+    }
+    chat.classList.add('atmem-utilities-ready');
+    const original=chat.querySelector('.atmem-intro-toggle'),intro=host.querySelector('.atmem-top-intro'),voice=host.querySelector('.atmem-top-voice');
+    intro.hidden=!original;voice.hidden=!chat.querySelector('.voice-status>button[aria-label="Voice settings"]');
+    if(original){const expanded=original.getAttribute('aria-expanded')==='true';const label=(expanded?'▾':'▸')+' Introduction';if(intro.textContent!==label)intro.textContent=label;if(intro.getAttribute('aria-expanded')!==String(expanded))intro.setAttribute('aria-expanded',String(expanded));}
+  };
+  if(!window.__atmemTopUtilities){window.__atmemTopUtilities=true;new MutationObserver(topUtilities).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['aria-expanded']});}
+  topUtilities();
   const resize=()=>{
     const input=document.querySelector('.chat>.composer textarea');if(!input)return;
     input.style.height='32px';input.style.height=Math.min(120,Math.max(32,input.scrollHeight))+'px';
