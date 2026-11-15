@@ -3,8 +3,8 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.1.5",
-  "description": "Design applications in AtMem AI Architect’s visual workspace, open it inside Orca, and inspect specifications and Terraform files.",
+  "version": "0.1.6",
+  "description": "Design applications in AtMem AI Architect’s visual workspace, open it inside Orca, and inspect specifications and Terraform files. Contact: hello@atmem.ai.",
   "author": {
     "name": "AtMem",
     "url": "https://atmem.ai"
