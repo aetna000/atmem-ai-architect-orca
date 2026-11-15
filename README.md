@@ -19,7 +19,7 @@ Select a project, open Architect, send the design handoff to Orca, and inspect i
 Requires Orca 1.4.257+, Node.js 22+, and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.1.5 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.1.6 --json
 ```
 
 Orca prints the exact permissions and approval command. Review those before approving.
