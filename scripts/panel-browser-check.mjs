@@ -3,6 +3,7 @@ import {createServer} from 'node:http'
 import {readFile} from 'node:fs/promises'
 import {resolve,extname} from 'node:path'
 import assert from 'node:assert/strict'
+import {modelSetupReady,openModelSetup} from '../panel/model-onboarding.mjs'
 const root=resolve(import.meta.dirname,'..')
 const server=createServer(async(req,res)=>{
  try{
@@ -62,6 +63,24 @@ try{
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`No horizontal overflow at ${width}px`)
  }
  await page.setViewportSize({width:360,height:779});await page.screenshot({path:'/tmp/architect-reference-360.png',fullPage:true});checks++
+ const modelPage=await browser.newPage()
+ await modelPage.goto(url+'?project=example-design')
+ await modelPage.evaluate(()=>{
+  document.body.innerHTML='<button class="model">Connect a model</button>'
+  document.querySelector('button').onclick=()=>{const dialog=document.createElement('section');dialog.role='dialog';dialog.textContent='Connect your model';document.body.append(dialog)}
+  localStorage.setItem('atforma-workspace-v3',JSON.stringify({id:'other-design'}))
+ })
+ assert.equal(await modelPage.evaluate(modelSetupReady),false)
+ await modelPage.evaluate(()=>localStorage.setItem('atforma-workspace-v3',JSON.stringify({id:'example-design'})))
+ await modelPage.evaluate(()=>{const welcome=document.createElement('section');welcome.role='dialog';welcome.setAttribute('aria-label','welcome');document.body.append(welcome)})
+ assert.equal(await modelPage.evaluate(modelSetupReady),false,'Wait for the initial welcome to finish before opening model setup')
+ await modelPage.evaluate(()=>document.querySelector('[aria-label="welcome"]').remove())
+ assert.equal(await modelPage.evaluate(modelSetupReady),true)
+ assert.equal(await modelPage.evaluate(openModelSetup),'opened')
+ await modelPage.getByRole('dialog').filter({hasText:'Connect your model'}).waitFor()
+ assert.equal(await modelPage.evaluate(openModelSetup),'dialog-already-open')
+ await modelPage.evaluate(()=>{document.querySelector('[role="dialog"]').remove();document.querySelector('button').textContent='Connected model'})
+ assert.equal(await modelPage.evaluate(openModelSetup),'already-connected');checks++
  assert.deepEqual(errors,[])
- console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout.`)
+ console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, model setup.`)
 }finally{await browser.close();await new Promise(r=>server.close(r))}

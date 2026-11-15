@@ -5,6 +5,7 @@ import {createController} from './controller'
 import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
+import {modelSetupReady,openModelSetup} from '../panel/model-onboarding.mjs'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
   try {
@@ -42,15 +43,23 @@ export default function activate(orca:OrcaWorkerApi) {
       return true
     },
     openBrowser:async(url,workspaceId)=>{
+      const address=new URL(url);address.hostname='localhost'
+      let pageId:string
       try {
-        const address=new URL(url);address.hostname='localhost'
         const worktree=workspaceId.startsWith('identity:')?workspaceId:`id:${workspaceId}`
         const {stdout}=await run('orca',['tab','create','--environment','local','--worktree',worktree,'--url',address.href,'--json'],{timeout:20000,maxBuffer:1048576})
         const created=JSON.parse(stdout)
         if(!created.ok||typeof created.result?.browserPageId!=='string')throw Error('Orca refused the browser tab.')
+        pageId=created.result.browserPageId
         const focused=await run('orca',['tab','switch','--environment','local','--worktree',worktree,'--page',created.result.browserPageId,'--focus','--json'],{timeout:20000,maxBuffer:1048576})
         if(!JSON.parse(focused.stdout).ok)throw Error('Orca could not focus the browser tab.')
       }catch{throw Error('Could not show Architect in Orca. Enable Orca CLI, then retry.')}
+      try {
+        const ready=await run('orca',['wait','--environment','local','--page',pageId,'--fn',modelSetupReady,'--timeout','10000','--json'],{timeout:12000,maxBuffer:1048576})
+        if(!JSON.parse(ready.stdout).ok)throw Error('Project has not finished loading.')
+        const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
+        if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
+      }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}
     }
   })
   orca.panels.handle('architect.overview',controller.overview)

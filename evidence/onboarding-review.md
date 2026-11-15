@@ -40,3 +40,9 @@ Nine worker/project regression tests, TypeScript and manifest/native validation 
 ## Focus and contact links — local.3
 
 Start now opens the configured local URL using `localhost`, then explicitly switches to the returned browser page with `--focus`. Live testing confirmed the active Orca tab was `http://localhost:5176/?project=<id>`, loaded without error, and showed the existing “my first project” name. The internal authenticated project API continues using its canonical loopback URL so existing associations are preserved. Added https://atmem.ai and mailto:info@atmem.ai footer links using Orca’s user-gesture external-link API. Nine regression tests, five browser checks (including link destinations), TypeScript and manifest validation pass. No capabilities changed.
+
+## Model setup and smaller typography — local.4
+
+Reduced heading, input, button, supporting and footer font sizes while preserving the approved layout. Start now waits for the selected project to finish loading and the initial welcome dialog to close, then opens Connect a model if unconnected. Existing model selections and existing dialogs are preserved. The integration uses a fixed page-scoped DOM action against pinned Architect 0.2.1; it does not supply credentials or select a model. Changed app DOM/storage contracts require requalification.
+
+The live Orca test showed the existing project name and the `connections` dialog together at localhost:5176. Nine regression tests and six browser checks pass. The additional browser case covers the initial-welcome race, project readiness, automatic opening, an already-open dialog, and an already-connected model. Smaller typography screenshots inspected at 360/560px. No additional permissions or model calls.
