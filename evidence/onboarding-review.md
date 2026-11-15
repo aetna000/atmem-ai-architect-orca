@@ -86,3 +86,10 @@ Added a visible bin + Reset board action in the board toolbar. It uses Architect
 The live isolated-browser test verifies cancellation preserves the original ID, and confirmation creates a new ID with zero nodes/edges/requirements/decisions/user chat turns and an empty composer. The current live tab also shows the enabled labeled bin; its contents were not reset. No model prompts sent. TypeScript, manifest validation and the responsive embedded checks pass.
 
 Removed the initial schematic image and review caption at the owner’s request. Primary entry reads Start new. Templates retains its previews; browser checks now exercise every template button, preview decoding and corresponding open request (10 panel checks total).
+
+
+## Complete reference example, local.11
+
+Start opens versioned `atmem-ai-ready-example-v1` with region/model/usage decisions and a complete 22-line AWS price worksheet (all nine non-note components accounted for). Original source templates remain intact. Official catalog snapshots, extracted meters and assumptions are retained. A real completed native engineering session captured a 17 MB immutable package containing generated source, prebuilt runtime ZIP, documentation and qualification logs. Capture itself is not acceptance.
+
+Verified: 13 application/source-contract tests, Terraform schema validation, two AWS mock plans, 12 plugin tests, 10 panel browser checks. ZIP CRC, runtime inclusion and every retained qualification file hash checked. Prepared checklist explicitly labels external local evidence and is separate from current project checks. Template previews removed. No cloud deployment or real tenant integration run. Local backend download binding must be re-created for a different installation.

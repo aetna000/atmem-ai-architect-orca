@@ -11,3 +11,7 @@ export async function templateProject(id:string):Promise<ProjectFile> {
  project.extensions={...project.extensions as object,templateOrigin:{id:template.id,kind:'public-example',copiedAt:now}}
  return project
 }
+
+export async function readyExampleProject():Promise<ProjectFile> {
+ return JSON.parse(await readFile(new URL('../assets/ready-example/project.atmem-ai-architect.json',import.meta.url),'utf8')) as ProjectFile
+}

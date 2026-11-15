@@ -2,11 +2,11 @@ import type {OrcaWorkerApi} from 'orca/worker'
 import {execFile} from 'node:child_process'
 import {promisify} from 'node:util'
 import {createController} from './controller'
-import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
+import {mkdir, mkdtemp, realpath, readFile} from 'node:fs/promises'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
 import {boardReset} from '../panel/board-reset.mjs'
-import {modelSetupReady,openModelSetup,embeddedLayout,exampleWelcome} from '../panel/model-onboarding.mjs'
+import {modelSetupReady,openModelSetup,embeddedLayout,exampleWelcome,exampleDownload} from '../panel/model-onboarding.mjs'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'> {
   try {
@@ -64,6 +64,11 @@ export default function activate(orca:OrcaWorkerApi) {
         if(!JSON.parse(reset.stdout).ok)throw Error('Reset control could not load.')
         const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',address.searchParams.get('example')==='1'?exampleWelcome:openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
         if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
+        if(address.searchParams.get('example')==='1') {
+          const receipt=JSON.parse(await readFile(new URL('../assets/ready-example/delivery.json',import.meta.url),'utf8'))
+          const download=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',exampleDownload(receipt),'--json'],{timeout:10000,maxBuffer:1048576})
+          if(!JSON.parse(download.stdout).ok)throw Error('Example download could not load.')
+        }
       }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}
     }
   })

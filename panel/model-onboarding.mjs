@@ -33,7 +33,7 @@ export const exampleWelcome = `(() => {
   style.textContent='.atmem-example-actions{display:flex;align-items:center;gap:8px}.atmem-example-label{font-size:11px;color:var(--ink-2);white-space:nowrap}.atmem-create-project{font:600 12px system-ui,sans-serif;padding:8px 11px;border:1px solid var(--accent);border-radius:9px;color:var(--accent);background:var(--paper);white-space:nowrap}@media(max-width:650px){.atmem-example-label{display:none}.atmem-create-project{font-size:11px;padding:6px}.bar .project-name{max-width:90px!important}}';
   document.head.append(style);
   const actions=document.createElement('div');actions.id='atmem-example-actions';actions.className='atmem-example-actions';
-  const label=document.createElement('span');label.className='atmem-example-label';label.textContent='AI example · sample design';
+  const label=document.createElement('span');label.className='atmem-example-label';label.textContent='Complete AI example';
   const button=document.createElement('button');button.type='button';button.className='atmem-create-project';button.textContent='Create new project';
   actions.append(label,button);host.prepend(actions);
   button.addEventListener('click',()=>{
@@ -62,3 +62,38 @@ export const exampleWelcome = `(() => {
   });
   return 'example-ready';
 })()`
+
+// Local authenticated delivery uses the immutable prepared reference, even after a user edits the board.
+export function exampleDownload(receipt) {
+ return `(() => {
+  const host=document.getElementById('atmem-example-actions');if(!host||document.getElementById('atmem-example-download'))return;
+  const receipt=${JSON.stringify(receipt)};
+  const button=document.createElement('button');button.id='atmem-example-download';button.type='button';button.className='atmem-create-project';button.textContent='Download example ZIP';button.title='Prepared reference: code, infrastructure, cost worksheet and local test evidence';host.prepend(button);
+  const mountChecks=()=>{
+    const delivery=document.querySelector('[aria-label="Implementation delivery"]');
+    if(!delivery||delivery.querySelector('#atmem-reference-checks'))return;
+    const section=document.createElement('section');section.id='atmem-reference-checks';section.className='final-checklist';section.setAttribute('aria-label','Prepared example checklist');
+    const heading=document.createElement('h3');heading.textContent='Prepared example · ready to download';section.append(heading);
+    const note=document.createElement('p');note.textContent='Checks below apply to the bundled reference ZIP. Your current project checks are shown separately.';section.append(note);
+    const list=document.createElement('ul');
+    for(const [name,status] of [['Requirements','Recorded'],['Cloud','AWS'],['Data country','Australia'],['Cloud region','Sydney'],['Cost worksheet','Complete · USD 7.56/month sample'],['Implementation','Source + built runtime included'],['Application checks','13 local tests passed'],['Terraform checks','Validated · 2 mock plans passed']]){
+      const row=document.createElement('li');const mark=document.createElement('span');mark.className='check-complete';mark.textContent='✓';const label=document.createElement('span');label.textContent=name;const value=document.createElement('strong');value.textContent=status;row.style.cssText='display:flex;gap:10px;align-items:center;padding:10px 0';label.style.flex='1';row.append(mark,label,value);list.append(row);
+    }
+    section.append(list);const download=document.createElement('button');download.className='btn primary';download.textContent='Download complete example';download.onclick=()=>button.click();section.append(download);
+    const scope=document.createElement('p');scope.textContent='Local checks use fixtures and mocked AWS. Live deployment and real tenant integration have not run. The cost worksheet includes explicit usage assumptions and price sources.';section.append(scope);delivery.prepend(section);
+  };
+  mountChecks();const observer=new MutationObserver(mountChecks);observer.observe(document.body,{childList:true,subtree:true});
+  const removeObserver=new MutationObserver(()=>{if(!document.getElementById('atmem-example-actions')){observer.disconnect();removeObserver.disconnect();document.getElementById('atmem-reference-checks')?.remove()}});removeObserver.observe(document.body,{childList:true,subtree:true});
+  button.addEventListener('click',async()=>{
+    button.disabled=true;button.textContent='Preparing download…';
+    try{
+      const session=await fetch('/api/session').then(r=>{if(!r.ok)throw Error('Local session unavailable');return r.json()});
+      const response=await fetch('/api/engineering/download',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+session.token},body:JSON.stringify({projectId:receipt.projectId,sessionId:receipt.sessionId,artifactId:receipt.artifactId})});
+      if(!response.ok)throw Error('Prepared download unavailable. Reopen the example from Orca.');
+      const bytes=await response.arrayBuffer();const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(b=>b.toString(16).padStart(2,'0')).join('');
+      if(hash!==receipt.sha256)throw Error('Download integrity check failed');
+      const url=URL.createObjectURL(new Blob([bytes],{type:'application/zip'}));const link=document.createElement('a');link.href=url;link.download='atmem-ai-complete-example.zip';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);button.textContent='Download example ZIP';
+    }catch(error){button.textContent='Retry download';button.title=error.message;alert(error.message)}finally{button.disabled=false}
+  });
+})()`;
+}

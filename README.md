@@ -80,3 +80,12 @@ Choose **Templates** to preview Private file storage, Document processing, or Kn
 **Start new** now opens the ready Knowledge assistant example immediately, without naming a project or connecting a model first. The example is labeled as a sample design. **Create new project** in its toolbar opens Architect’s normal new-project flow; the example is preserved and the resulting blank board uses its own project ID. Model setup remains available when creating your own work.
 
 The board toolbar includes a visible bin labeled **Reset board**. Confirmation starts a fresh project scope with an empty board, conversation, requirements and decisions; saved projects and the model connection remain. The initial screen no longer shows the example diagram preview; previews remain in Templates.
+
+
+### Prepared local reference example
+
+Start opens the complete AI knowledge assistant reference. It includes an Australia/Sydney AWS cost worksheet with official price snapshots, requirements and decisions, generated application and Terraform source, a built Python 3.13/ARM64 Lambda artifact and local qualification evidence. Delivery shows a separate prepared-reference checklist and downloads the immutable reference ZIP. Current project checks remain separate; editing a board does not silently alter the prepared download. Template thumbnails have been removed.
+
+The local preparation uses `scripts/fetch-example-prices.py`, `scripts/prepare-ready-example.mjs` (set `ARCHITECT_SOURCE_DIR` to Architect 0.2.1), registration/seeding and `scripts/capture-ready-example.mjs`. Registration refuses to overwrite an existing design. The packaged `delivery.json` is bound to this local Architect session; it is not a portable or public deployment receipt. The exact ZIP is also retained in `assets/ready-example/complete-example.zip`. Re-register and capture a new real completed session before distributing a build for another Architect installation.
+
+The 13 application tests and two Terraform mock plans are local fixture checks. Live AWS deployment, real tenant adapters and production acceptance have not run. The worksheet is illustrative usage, not a bill or client quote.

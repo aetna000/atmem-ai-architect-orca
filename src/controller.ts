@@ -5,7 +5,7 @@ import type {Document} from './protocol'
 import {createHash} from 'node:crypto'
 import {designSources, readDesign, connectDesign} from './project-bridge'
 import type {ProjectFile} from './project-bridge'
-import {templateProject} from './templates'
+import {templateProject,readyExampleProject} from './templates'
 
 export const DOCUMENTS: Document[] = [
   {path:'START_HERE.md',label:'Start here'},
@@ -102,7 +102,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     opening=(async()=>{
       if(input.example&&input.template!=='knowledge-assistant')throw Error('Choose the ready AI example.')
       if(input.template&&input.workspaceId)throw Error('Start a template as a new project.')
-      const template=input.template?await templateProject(input.template):undefined
+      const template=input.example?await readyExampleProject():input.template?await templateProject(input.template):undefined
       let workspaceId=input.workspaceId
       if(!workspaceId) {
         const name=input.name?.trim()
@@ -120,7 +120,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       if(source&&!sources.some(s=>s.path===source))throw Error('Design file is no longer available. Refresh folders.')
       // Validate the selected file before starting or opening anything.
       const file=template||(source?await readDesign(ws.path,source):undefined)
-      if(template&&input.name?.trim())template.meta.name=input.name.trim()
+      if(template&&!input.example&&input.name?.trim())template.meta.name=input.name.trim()
       const key='design-'+createHash('sha256').update(url+'\n'+await realpath(ws.path)+'\n'+(source||(input.template?'template:'+input.template:'blank'))).digest('hex')
       const linked=await orca.storage.get(key)
       const name=input.name?.trim()||ws.project||ws.name
@@ -135,7 +135,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
         await (deps.wait?.()||new Promise(r=>setTimeout(r,1000)))
       }
       deps.progress?.('Loading your design…')
-      const projectId=await (deps.connectDesign||connectDesign)(url,file,typeof linked==='string'?linked:undefined,name)
+      const projectId=await (deps.connectDesign||connectDesign)(url,file,!input.example&&typeof linked==='string'?linked:undefined,name)
       await orca.storage.set(key,projectId)
       await orca.host.call('workspace.open',{workspaceId:ws.id})
       await deps.openBrowser(url+'/?project='+encodeURIComponent(projectId)+(input.example?'&example=1':''),ws.id)

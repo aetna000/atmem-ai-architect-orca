@@ -1,0 +1,15 @@
+{
+  "producer": "Architect 0.2.1",
+  "projectId": "atmem-ai-ready-example-v1",
+  "files": 77,
+  "bytes": 346618,
+  "sha256": "4aeecad7e66e9f1635beef72052ca016d0ed6238407bd5be2610cd85c79a8472",
+  "cost": {
+    "monthly": 7.56,
+    "currency": "USD",
+    "maturity": "Detailed worksheet",
+    "complete": true
+  },
+  "validation": "13 application tests, Terraform schema and 2 mock plans passed; evidence included",
+  "cloudDeployment": "not_run"
+}

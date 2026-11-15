@@ -22,7 +22,7 @@ function render(){
  $('new-fields').hidden=existing||demo;$('folder-fields').hidden=!existing
  $('template-fields').hidden=state.mode!=='template'
  const chosen=templates.find(t=>t.id===state.template)
- $('template-preview').src=chosen.preview;$('template-preview').alt=chosen.title+' sample architecture preview';$('template-description').textContent=chosen.description
+ $('template-description').textContent=chosen.description
  for(const button of document.querySelectorAll('[data-template]')){button.setAttribute('aria-pressed',String(button.dataset.template===state.template));button.disabled=state.busy}
  $('project-name').disabled=state.busy||existing||demo;$('project-name').required=!existing&&!demo
  $('folder').disabled=state.busy||state.loading;options('folder',state.projects,state.selected,state.loading?'Loading folders…':'Choose a folder')
