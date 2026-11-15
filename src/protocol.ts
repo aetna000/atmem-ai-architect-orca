@@ -8,7 +8,7 @@ declare module 'orca' {
     'architect.overview': {output: Overview}
     'architect.start': {input: {workspaceId:string}; output: Action}
     'architect.stop': {output: Action}
-    'architect.open': {input: {workspaceId?:string;name?:string;source?:string;template?:string}; output: Action}
+    'architect.open': {input: {workspaceId?:string;name?:string;source?:string;template?:string;example?:boolean}; output: Action}
     'architect.documents': {input: {workspaceId:string}; output: {documents:Document[];designs:{path:string;name:string}[]}}
     'architect.document': {input: {workspaceId:string; path:string}; output: Action}
     'architect.expand': {output: Action}

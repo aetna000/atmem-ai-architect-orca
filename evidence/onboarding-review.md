@@ -70,3 +70,11 @@ Eleven worker/project tests and seven browser checks pass. All three copied temp
 ## Entry layout cleanup — local.8
 
 Removed the duplicate Start from template button; Templates remains in the main tabs. Shortened the folder tab to Open folder, prevented label wrapping and reduced tab padding/type. Reset browser-default button chrome. Seven browser checks pass; actual installed 360px native capture inspected with no render errors.
+
+## Ready AI example first — local.9
+
+The initial Start action opens the bundled Knowledge assistant example with no name entry required. Its 10-component design appears immediately, without the connection dialog blocking exploration. The original personal-project and selectable-template paths remain available; connection setup remains automatic on their normal entry. This is a sample architecture, not a deployed app or generated implementation.
+
+A page-scoped example marker and Create new project action use Architect’s native new-project flow. After confirmation, the example marker and deep link are removed, avoiding a reload that would reopen the example. Native project switching preserves the saved example. The helper does not fill model credentials or send prompts.
+
+Eleven worker/project tests and eight browser checks pass. The live desktop test opened the 10-component example with its marker and Create new project control, followed that native action into a blank board, confirmed zero components and removal of the example/deep-link parameters, then reopened the saved example. The default panel Start request is checked without a name or model. No model or cloud operations.

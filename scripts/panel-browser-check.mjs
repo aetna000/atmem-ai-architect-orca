@@ -41,6 +41,13 @@ try{
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
  assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
  assert.equal(await page.getByRole('link',{name:'Contact us',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')
+ assert.equal(await page.getByRole('button',{name:'Start',exact:true}).isEnabled(),true)
+ await page.getByRole('button',{name:'Start',exact:true}).click()
+ await page.getByRole('button',{name:'Continue in Architect',exact:true}).waitFor()
+ assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{name:'AI knowledge assistant example',template:'knowledge-assistant',example:true})
+ checks++
+ await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ await page.getByRole('button',{name:'Create new project',exact:true}).click()
  assert.equal(await page.getByRole('button',{name:'Enter a project name',exact:true}).isDisabled(),true)
  await page.getByLabel('Project name',{exact:true}).fill('Support portal')
  await page.getByRole('button',{name:'Start designing',exact:true}).click()
@@ -49,7 +56,7 @@ try{
  checks++
  await page.getByRole('button',{name:'Stop',exact:true}).click();await page.getByText('Not running',{exact:true}).waitFor()
  assert.equal(await page.getByRole('button',{name:'Stop',exact:true}).count(),0);checks++
- await page.getByRole('tab',{name:'New project',exact:true}).click()
+ await page.getByRole('tab',{name:'Start',exact:true}).click()
  await page.getByRole('tab',{name:'Open folder',exact:true}).focus();await page.keyboard.press('ArrowLeft')
  assert.equal(await page.getByRole('tab',{name:'Templates',exact:true}).getAttribute('aria-selected'),'true');await page.keyboard.press('Home');checks++
  await page.evaluate(()=>{window.fixture.fail=true;window.fixture.designs=[{path:'one.atforma.json',name:'Design one'},{path:'two.atforma.json',name:'Design two'}]})

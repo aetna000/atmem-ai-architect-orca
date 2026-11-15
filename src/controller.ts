@@ -97,9 +97,10 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     await orca.storage.delete('session')
     return {message:closed?'Architect terminal closed.':'Architect terminal is already closed.'}
   }
-  const open=async(input:{workspaceId?:string;name?:string;source?:string;template?:string})=>{
+  const open=async(input:{workspaceId?:string;name?:string;source?:string;template?:string;example?:boolean})=>{
     if(opening)throw Error('A design is already opening. Wait for it to finish.')
     opening=(async()=>{
+      if(input.example&&input.template!=='knowledge-assistant')throw Error('Choose the ready AI example.')
       if(input.template&&input.workspaceId)throw Error('Start a template as a new project.')
       const template=input.template?await templateProject(input.template):undefined
       let workspaceId=input.workspaceId
@@ -137,7 +138,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       const projectId=await (deps.connectDesign||connectDesign)(url,file,typeof linked==='string'?linked:undefined,name)
       await orca.storage.set(key,projectId)
       await orca.host.call('workspace.open',{workspaceId:ws.id})
-      await deps.openBrowser(url+'/?project='+encodeURIComponent(projectId),ws.id)
+      await deps.openBrowser(url+'/?project='+encodeURIComponent(projectId)+(input.example?'&example=1':''),ws.id)
       const metadataKey='workspace-meta-'+createHash('sha256').update(resolve(ws.path)).digest('hex')
       const metadata=await orca.storage.get(metadataKey) as {name?:string}|null
       const displayName=input.name?.trim()||file?.meta.name||metadata?.name
