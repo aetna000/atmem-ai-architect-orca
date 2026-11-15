@@ -71,6 +71,11 @@
       "path": "assets/terraform-orca.png",
       "alt": "Generated Terraform draft open in Orca beside the AtMem AI Architect panel and receiving files.",
       "caption": "Inspect Terraform and specifications beside your code in Orca."
+    },
+    {
+      "path": "assets/complete-example-delivery.png",
+      "alt": "Prepared AI reference Delivery with requirements, costs, source and eight completed reference checks.",
+      "caption": "Download the complete reference example, with costs, built runtime and local check evidence."
     }
   ]
 }

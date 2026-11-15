@@ -4,6 +4,8 @@ Explore a complete AI project, then create your own architecture inside Orca.
 
 ![AtMem AI Architect](assets/workspace-cover.png)
 
+[Complete reference Delivery](assets/complete-example-delivery.png)
+
 [Public listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca) · [atmem.ai](https://atmem.ai) · [Contact us: hello@atmem.ai](mailto:hello@atmem.ai)
 
 ## Install
