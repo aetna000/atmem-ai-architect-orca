@@ -40,7 +40,7 @@ try{
  assert.match(await page.locator('#folder option').nth(1).textContent(),/Support assistant.*Opened.*2026/)
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
  assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
- assert.equal(await page.getByRole('link',{name:'Contact us',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')
+ assert.equal(await page.getByRole('link',{name:'Contact us: info@atmem.ai',exact:true}).getAttribute('href'),'mailto:info@atmem.ai')
  assert.equal(await page.getByRole('button',{name:'Start new',exact:true}).isEnabled(),true)
  assert.equal(await page.locator('#example-fields img,.example-note').count(),0)
  await page.getByRole('button',{name:'Start new',exact:true}).click()
