@@ -37,3 +37,5 @@ Qualify Windows/Linux, support a future independently released Architect runtime
 
 
 0.1.5: Owner reviewed three unpublished concepts and selected Midnight. Publish the exact approved image as the cover, retaining the workspace/Terraform screenshot gallery and existing runtime/capabilities.
+
+Public listing screenshots must be at least 1280×800 under the current Orca validator. Capture the actual application at sufficient viewport size; do not rely only on an older local validator.
