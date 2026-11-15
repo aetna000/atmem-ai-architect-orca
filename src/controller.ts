@@ -5,6 +5,7 @@ import type {Document} from './protocol'
 import {createHash} from 'node:crypto'
 import {designSources, readDesign, connectDesign} from './project-bridge'
 import type {ProjectFile} from './project-bridge'
+import {templateProject} from './templates'
 
 export const DOCUMENTS: Document[] = [
   {path:'START_HERE.md',label:'Start here'},
@@ -96,15 +97,17 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     await orca.storage.delete('session')
     return {message:closed?'Architect terminal closed.':'Architect terminal is already closed.'}
   }
-  const open=async(input:{workspaceId?:string;name?:string;source?:string})=>{
+  const open=async(input:{workspaceId?:string;name?:string;source?:string;template?:string})=>{
     if(opening)throw Error('A design is already opening. Wait for it to finish.')
     opening=(async()=>{
+      if(input.template&&input.workspaceId)throw Error('Start a template as a new project.')
+      const template=input.template?await templateProject(input.template):undefined
       let workspaceId=input.workspaceId
       if(!workspaceId) {
         const name=input.name?.trim()
         if(!name||name.length>100)throw Error('Name your project using 1–100 characters.')
         if(!deps.createWorkspace)throw Error('Open a local folder in Orca first.')
-        const draftKey='new-'+createHash('sha256').update(name).digest('hex')
+        const draftKey='new-'+createHash('sha256').update(input.template?name+'\n'+input.template:name).digest('hex')
         const previous=await orca.storage.get(draftKey)
         const available=await workspaces()
         workspaceId=typeof previous==='string'&&available.some(w=>w.id===previous)?previous:await deps.createWorkspace(name)
@@ -115,8 +118,9 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       if(!source&&sources.length>1)throw Error('Choose which saved design to open.')
       if(source&&!sources.some(s=>s.path===source))throw Error('Design file is no longer available. Refresh folders.')
       // Validate the selected file before starting or opening anything.
-      const file=source?await readDesign(ws.path,source):undefined
-      const key='design-'+createHash('sha256').update(url+'\n'+await realpath(ws.path)+'\n'+(source||'blank')).digest('hex')
+      const file=template||(source?await readDesign(ws.path,source):undefined)
+      if(template&&input.name?.trim())template.meta.name=input.name.trim()
+      const key='design-'+createHash('sha256').update(url+'\n'+await realpath(ws.path)+'\n'+(source||(input.template?'template:'+input.template:'blank'))).digest('hex')
       const linked=await orca.storage.get(key)
       const name=input.name?.trim()||ws.project||ws.name
       deps.progress?.('Starting Architect… First setup may take a few minutes.')

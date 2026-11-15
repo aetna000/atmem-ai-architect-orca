@@ -15,9 +15,16 @@
     <main>
       <div class="switcher" role="tablist" aria-label="Project source">
         <button id="new-tab" role="tab" aria-selected="true" aria-controls="new-fields">New project</button>
+        <button id="template-tab" role="tab" aria-selected="false" aria-controls="template-fields" tabindex="-1">Templates</button>
         <button id="folder-tab" role="tab" aria-selected="false" aria-controls="folder-fields" tabindex="-1">Existing folder</button>
       </div>
       <form id="project-form">
+        <section id="template-fields" role="tabpanel" aria-labelledby="template-tab" hidden>
+          <h2>Start from a template</h2>
+          <p class="support">Public sample designs. Review their requirements and assumptions before adapting.</p>
+          <div id="template-list" class="template-list" role="group" aria-label="Example templates"></div>
+          <figure class="template-preview"><img id="template-preview" alt=""><figcaption id="template-description"></figcaption></figure>
+        </section>
         <section id="new-fields" role="tabpanel" aria-labelledby="new-tab">
           <label for="project-name">Project name</label>
           <input id="project-name" name="projectName" placeholder="e.g. Customer support assistant" maxlength="100" autocomplete="off" required>
@@ -32,6 +39,7 @@
           </div>
         </section>
         <button id="launch" class="primary" type="submit" disabled><span id="launch-label">Enter a project name</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7m0-7L10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5"/></svg></button>
+        <button id="browse-templates" class="template-entry" type="button">Start from template</button>
         <p id="progress" role="status" class="notice" hidden></p>
         <div id="failure" role="alert" class="error" hidden></div>
         <p id="setup-note" class="support">First run installs Architect locally. We’ll open model setup so you can start chatting.</p>
@@ -58,7 +66,7 @@
       <div class="footer-links">
         <a href="https://atmem.ai/ai-architect/install/" id="guide" data-external target="_blank" rel="noopener noreferrer">Getting started</a>
         <button id="reload" class="text-button">Reload folders</button>
-        <span class="version">v0.2.0-local.6<br>Local preview</span>
+        <span class="version">v0.2.0-local.7<br>Local preview</span>
       </div>
       <div class="contact-links"><a href="https://atmem.ai" data-external target="_blank" rel="noopener noreferrer">atmem.ai ↗</a><a href="mailto:info@atmem.ai" data-external>Contact us</a></div>
     </footer>

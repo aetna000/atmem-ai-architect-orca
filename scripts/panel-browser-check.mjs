@@ -9,7 +9,7 @@ const server=createServer(async(req,res)=>{
  try{
   const path=resolve(root,'.'+new URL(req.url,'http://localhost').pathname)
   if(!path.startsWith(root+'/')){res.writeHead(403).end();return}
-  res.setHeader('Content-Type',({'.html':'text/html','.css':'text/css','.mjs':'text/javascript','.woff2':'font/woff2'})[extname(path)]||'application/octet-stream')
+  res.setHeader('Content-Type',({'.html':'text/html','.css':'text/css','.mjs':'text/javascript','.woff2':'font/woff2','.svg':'image/svg+xml'})[extname(path)]||'application/octet-stream')
   res.end(await readFile(path))
  }catch{res.writeHead(404).end()}
 })
@@ -51,13 +51,24 @@ try{
  assert.equal(await page.getByRole('button',{name:'Stop',exact:true}).count(),0);checks++
  await page.getByRole('tab',{name:'New project',exact:true}).click()
  await page.getByRole('tab',{name:'Existing folder',exact:true}).focus();await page.keyboard.press('ArrowLeft')
- assert.equal(await page.getByRole('tab',{name:'New project',exact:true}).getAttribute('aria-selected'),'true');checks++
+ assert.equal(await page.getByRole('tab',{name:'Templates',exact:true}).getAttribute('aria-selected'),'true');await page.keyboard.press('Home');checks++
  await page.evaluate(()=>{window.fixture.fail=true;window.fixture.designs=[{path:'one.atforma.json',name:'Design one'},{path:'two.atforma.json',name:'Design two'}]})
  await page.getByRole('button',{name:'Reload folders',exact:true}).click()
  await page.getByRole('tab',{name:'Existing folder',exact:true}).click()
  await page.getByLabel('Saved design',{exact:true}).selectOption('two.atforma.json')
  await page.getByRole('button',{name:'Open design in Architect',exact:true}).click()
  await page.getByRole('alert').filter({hasText:'invalid JSON'}).waitFor();checks++
+ await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ await page.getByRole('button',{name:'Start from template',exact:true}).click()
+ await page.getByRole('button',{name:/Knowledge assistant/}).click()
+ assert.equal(await page.getByLabel('Project name',{exact:true}).inputValue(),'Knowledge assistant')
+ assert.equal(await page.locator('#template-preview').getAttribute('src'),'../assets/templates/knowledge-assistant.svg')
+ await page.locator('#template-preview').evaluate(img=>img.decode())
+ assert.ok(await page.locator('#template-preview').evaluate(img=>img.naturalWidth>0))
+ await page.screenshot({path:'/tmp/architect-template-gallery.png',fullPage:true})
+ await page.getByRole('button',{name:'Use this template',exact:true}).click()
+ assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{name:'Knowledge assistant',template:'knowledge-assistant'})
+ checks++
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
  for(const width of [280,360,400,560]){
   await page.setViewportSize({width,height:width===560?1180:779})

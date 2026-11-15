@@ -58,3 +58,11 @@ Live isolated-browser checks typed an unsent draft against the public saved samp
 ## Required project name — local.6
 
 The empty-name action now reads “Enter a project name” and uses a neutral disabled style. Entering a nonblank name changes it to the enabled pink “Start designing” action. Six panel/browser checks pass and the installed native panel capture settled without errors.
+
+## Expanded workspace and templates — local.7
+
+Expanded the current Orca workspace by hiding its sidebars; the app viewport increased from 893px to 1469px and uses its desktop canvas/chat layout. A successful panel launch now closes the plugin sidebar via Orca’s built-in right-sidebar toggle; the plugin remains available from the sidebar. Existing left-sidebar preferences are preserved during subsequent launches.
+
+Added a Templates tab and Start from template entry with three bundled public AWS examples: Private file storage (2 components), Document processing (6), and Knowledge assistant (10). Users see a schematic preview and scope description before naming an independent project. Copies have new IDs/timestamps and template provenance; retry associations distinguish different templates with the same name. Unrecognized template IDs and mixing a template with an existing workspace are rejected. These are synthetic sample designs requiring review, not deployed systems.
+
+Eleven worker/project tests and seven browser checks pass. All three copied templates independently pass the pinned Architect project reader. Live worker testing created “Knowledge assistant example” and the real Orca browser showed all 10 components at 1469px width. Browser preview decoding and template selection/request are checked. No model prompts or cloud operations were performed. Capabilities unchanged.

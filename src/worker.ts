@@ -70,4 +70,8 @@ export default function activate(orca:OrcaWorkerApi) {
   orca.panels.handle('architect.open',controller.open)
   orca.panels.handle('architect.documents',controller.documents)
   orca.panels.handle('architect.document',controller.document)
+  orca.panels.handle('architect.expand',async()=>{
+    await orca.host.call('commands.run',{action:'sidebar.right.toggle'})
+    return {message:'Workspace view expanded.'}
+  })
 }
