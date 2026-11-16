@@ -102,3 +102,10 @@ Owner authorized publication of all latest changes. Architect 0.2.2 now owns the
 Plugin checks: TypeScript, 14 worker/bridge/template/runtime tests and 10 panel browser checks pass. Native runtime checks and portability evidence are retained in Architect's specs/031-first-use-release. Cloud deployment and real tenant integration remain not run.
 
 A portable-runtime probe distinguishes old Architect from a current runtime. Only a plugin-recorded terminal may be restarted automatically; independent instances receive an actionable upgrade message.
+
+
+## Folder location and copy (local follow-up)
+
+Local workspace listings expose the host-provided absolute folder path. The folder selector and options use it as a hover title. A compact read-only path and copy button follow the selected folder. Clipboard writes happen only on a click; a selected-text fallback handles embedded browsers without the Clipboard API. When copying is blocked, the path stays selected for keyboard copying. No new worker capabilities or external access were added.
+
+Validated TypeScript, 14 worker/bridge/template/runtime tests and 14 browser checks. Cases include exact path copying, spaces/Unicode, changing the selected folder, unavailable clipboard, blocked copying and clearing selection. Public tags and the npm version are unchanged.

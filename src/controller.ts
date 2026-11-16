@@ -71,7 +71,7 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
       let modified:number|null=null
       try{const stat=await lstat(path);modified=stat.mtimeMs}catch{/* Keep unavailable folders visible. */}
       const opened=typeof saved?.openedAt==='number'&&Number.isFinite(saved.openedAt)?saved.openedAt:null
-      return {id,name:saved?.name||(label===name?name:`${label} · ${name}`),updatedAt:opened??modified,dateKind:opened?'opened' as const:'folder' as const}
+      return {id,path:resolve(path),name:saved?.name||(label===name?name:`${label} · ${name}`),updatedAt:opened??modified,dateKind:opened?'opened' as const:'folder' as const}
     }))
     entries.sort((a,b)=>(b.updatedAt??0)-(a.updatedAt??0)||a.name.localeCompare(b.name)||a.id.localeCompare(b.id))
     return {workspaces:entries,url,owned:!!(await orca.storage.get('session')),runtime:await deps.probe(url)}

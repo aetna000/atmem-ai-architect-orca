@@ -12,8 +12,8 @@ async function fixture(run:(c:ReturnType<typeof createController>,host:ReturnTyp
  const worker=await mountWorker(module,{host})
  try{await run(c!,host,root);assert.deepEqual(worker.refusals,[])}finally{await worker.deactivate();await rm(root,{recursive:true,force:true})}
 }
-test('lists only local projects and starts pinned Architect once under concurrent clicks',()=>fixture(async(c,host)=>{
- assert.equal((await c.overview()).workspaces[0].id,'local-1')
+test('lists only local projects and starts pinned Architect once under concurrent clicks',()=>fixture(async(c,host,root)=>{
+ assert.equal((await c.overview()).workspaces[0].id,'local-1');assert.equal((await c.overview()).workspaces[0].path,root)
  await Promise.all([c.start({workspaceId:'local-1'}),c.start({workspaceId:'local-1'})])
  assert.equal(host.callsOf('terminal.create').length,1)
  assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.2 --no-open --port 5176'})

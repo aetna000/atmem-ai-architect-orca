@@ -10,7 +10,7 @@ function folderDate(item){
  return (item.dateKind==='opened'?'Opened ':'Updated ')+new Intl.DateTimeFormat(undefined,{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit'}).format(date)
 }
 function options(id,items,selected,placeholder){
- const select=$(id);select.replaceChildren(new Option(placeholder,''),...items.map(item=>new Option(id==='folder'?item.name+' · '+folderDate(item):item.name,item.id)))
+ const select=$(id);select.replaceChildren(new Option(placeholder,''),...items.map(item=>{const option=new Option(id==='folder'?item.name+' · '+folderDate(item):item.name,item.id);if(id==='folder')option.title=item.path||'';return option}))
  select.value=selected
 }
 function render(){
@@ -26,6 +26,12 @@ function render(){
  for(const button of document.querySelectorAll('[data-template]')){button.setAttribute('aria-pressed',String(button.dataset.template===state.template));button.disabled=state.busy}
  $('project-name').disabled=state.busy||existing||demo;$('project-name').required=!existing&&!demo
  $('folder').disabled=state.busy||state.loading;options('folder',state.projects,state.selected,state.loading?'Loading folders…':'Choose a folder')
+ const folderPath=state.projects.find(item=>item.id===state.selected)?.path||''
+ $('folder').title=folderPath||'Choose a folder to see its location'
+ $('folder-location').hidden=!folderPath
+ $('folder-path').value=folderPath;$('folder-path').title=folderPath
+ $('copy-folder-path').disabled=state.busy||state.loading||!folderPath
+
  $('source-field').hidden=state.designs.length<2
  $('source').disabled=state.busy||state.loading;options('source',state.designs.map(d=>({id:d.path,name:d.name})),state.source,'Choose a design')
  $('folder-note').textContent=!state.projects.length?'Open a local folder in Orca, or start a new project here.':!state.selected?'Choose the folder you want to design for.':state.designs.length?'Opens the saved design and keeps your latest Architect edits.':'Starts a blank design. Existing source code is not imported.'
@@ -100,6 +106,16 @@ document.querySelector('.switcher').addEventListener('keydown',event=>{
 })
 $('project-name').addEventListener('input',render)
 $('folder').addEventListener('change',()=>{state.selected=$('folder').value;state.source='';state.opened=false;notice();void refresh()})
+$('folder-path').addEventListener('click',()=>$('folder-path').select())
+$('copy-folder-path').addEventListener('click',async()=>{
+ if($('copy-folder-path').disabled)return
+ const path=$('folder-path').value
+ try{
+  try{if(!navigator.clipboard?.writeText)throw Error('Use selected text');await navigator.clipboard.writeText(path)}
+  catch{const field=$('folder-path');field.focus();field.select();if(!document.execCommand('copy'))throw Error('Copy unavailable')}
+  notice('Folder path copied.')
+ }catch{const field=$('folder-path');field.focus();field.select();notice('Path selected. Press ⌘C or Ctrl+C to copy.')}
+})
 $('source').addEventListener('change',()=>{state.source=$('source').value;render()})
 $('project-form').addEventListener('submit',event=>{
  event.preventDefault();if($('launch').disabled)return

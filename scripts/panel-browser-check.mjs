@@ -21,7 +21,7 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message))
  await page.addInitScript(()=>{
   const listeners={}
-  window.fixture={runtime:'ready',owned:true,projects:[{id:'example',name:'Support assistant',updatedAt:1794700000000,dateKind:'opened'}],calls:[],fail:false,designs:[]}
+  window.fixture={runtime:'ready',owned:true,projects:[{id:'example',name:'Support assistant',path:'/Users/example/Client plans/Support assistant',updatedAt:1794700000000,dateKind:'opened'}],calls:[],fail:false,designs:[]}
   window.orca={plugin:{on:(name,fn)=>{listeners[name]=fn;return {dispose(){}}},request:async(name,input)=>{
    const f=window.fixture;f.calls.push({name,input})
    if(name==='architect.overview')return {workspaces:f.projects,url:'http://127.0.0.1:5176',owned:f.owned,runtime:f.runtime}
@@ -35,6 +35,7 @@ try{
    return {message:'Opened document.'}
   }},on:()=>({dispose(){}}),host:{call:async()=>({opened:true})}}
  })
+ await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.fixture.copied=text}}}))
  const url=`http://127.0.0.1:${server.address().port}/panel/index.html`
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
  assert.match(await page.locator('#folder option').nth(1).textContent(),/Support assistant.*Opened.*2026/)
@@ -83,6 +84,33 @@ try{
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,`No horizontal overflow at ${width}px`)
  }
  await page.setViewportSize({width:360,height:779});await page.screenshot({path:'/tmp/architect-reference-360.png',fullPage:true});checks++
+ // Path tooltips and copy stay tied to the selected local folder.
+ await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ await page.getByRole('tab',{name:'Open folder',exact:true}).click()
+ const firstPath='/Users/example/Client plans/Support assistant'
+ assert.equal(await page.locator('#folder').getAttribute('title'),firstPath)
+ assert.equal(await page.locator('#folder option').nth(1).getAttribute('title'),firstPath)
+ assert.equal(await page.getByRole('textbox',{name:'Absolute folder path',exact:true}).inputValue(),firstPath)
+ await page.getByRole('button',{name:'Copy absolute folder path',exact:true}).click()
+ assert.equal(await page.evaluate(()=>window.fixture.copied),firstPath);checks++
+ await page.evaluate(()=>window.fixture.projects.push({id:'second',name:'Research',path:'/Volumes/Work/Research — AI',updatedAt:1794700000001,dateKind:'opened'}))
+ await page.getByRole('button',{name:'Reload folders',exact:true}).click()
+ await page.getByLabel('Orca folder',{exact:true}).selectOption('second')
+ await page.getByRole('button',{name:'Copy absolute folder path',exact:true}).click()
+ assert.equal(await page.locator('#folder').getAttribute('title'),'/Volumes/Work/Research — AI')
+ assert.equal(await page.evaluate(()=>window.fixture.copied),'/Volumes/Work/Research — AI');checks++
+ await page.evaluate(()=>{navigator.clipboard.writeText=async()=>{throw Error('Clipboard API unavailable')};document.execCommand=()=>{const field=document.querySelector('#folder-path');window.fixture.fallback=field.value.slice(field.selectionStart,field.selectionEnd);return true}})
+ await page.getByRole('button',{name:'Copy absolute folder path',exact:true}).click()
+ assert.equal(await page.evaluate(()=>window.fixture.fallback),'/Volumes/Work/Research — AI')
+ await page.getByRole('status').filter({hasText:'Folder path copied.'}).waitFor();checks++
+ await page.evaluate(()=>document.execCommand=()=>false)
+ await page.getByRole('button',{name:'Copy absolute folder path',exact:true}).click()
+ await page.getByRole('status').filter({hasText:'Path selected.'}).waitFor()
+ assert.equal(await page.locator('#folder-path').evaluate(field=>field.selectionEnd-field.selectionStart),'/Volumes/Work/Research — AI'.length)
+ await page.getByLabel('Orca folder',{exact:true}).selectOption('')
+ assert.equal(await page.locator('#copy-folder-path').isDisabled(),true)
+ assert.equal(await page.locator('#folder-path').inputValue(),'')
+ assert.equal(await page.locator('#folder-location').isVisible(),false);checks++
  const modelPage=await browser.newPage()
  await modelPage.goto(url+'?project=example-design')
  await modelPage.evaluate(()=>{
@@ -102,5 +130,5 @@ try{
  await modelPage.evaluate(()=>{document.querySelector('[role="dialog"]').remove();document.querySelector('button').textContent='Connected model'})
  assert.equal(await modelPage.evaluate(openModelSetup),'already-connected');checks++
  assert.deepEqual(errors,[])
- console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, model setup.`)
+ console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, folder path hover/copy/fallback, model setup.`)
 }finally{await browser.close();await new Promise(r=>server.close(r))}

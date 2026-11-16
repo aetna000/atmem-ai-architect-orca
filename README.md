@@ -25,7 +25,7 @@ Orca shows the exact worker permissions before enabling the plugin.
 3. Open **Delivery** to review the sample checks and download the complete reference ZIP.
 4. Choose **Create new project** when ready. Connect your model to start chatting.
 
-Templates offer other starting designs. A personal blank project requires a name. **Open folder** reopens an existing Orca folder's saved design. Folders are listed newest first with dates. Template previews have been removed.
+Templates offer other starting designs. A personal blank project requires a name. **Open folder** reopens an existing Orca folder's saved design. Folders are listed newest first with dates. Hover a folder to see its absolute location, or use the copy button beside the path. Template previews have been removed.
 
 The complete example includes Sydney/Australia settings, an illustrative AWS cost worksheet with official price snapshots, requirements, generated application and Terraform source, a built Python 3.13/ARM64 runtime, and local test evidence. Its 13 application tests and two Terraform mock plans do not establish live deployment or real tenant integration. Usage assumptions are included; the estimate is not a bill or client quote.
 
