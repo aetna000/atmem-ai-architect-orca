@@ -13,7 +13,7 @@ Explore a complete AI project, then create your own architecture inside Orca.
 Requires Orca 1.4.257+, Node.js 22+ and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.2.0 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.2.1 --json
 ```
 
 Orca shows the exact worker permissions before enabling the plugin.

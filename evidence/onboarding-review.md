@@ -116,3 +116,8 @@ Validated TypeScript, 14 worker/bridge/template/runtime tests and 14 browser che
 Added a native local-folder picker and explicit absolute-path entry to Open folder. A valid directory is reused if already registered, otherwise added through the existing fixed-argument Orca repo-add command. Saved design discovery and project import remain the same reviewed flow; multiple design files still require selection. Cancellation or invalid paths do not start Architect or register a folder. Picker processes receive the request abort signal, and pasted paths are never evaluated by a shell.
 
 Checks: TypeScript; 16 worker/bridge/runtime tests; 17 panel browser checks; plugin check; macOS picker AppleScript compiled without opening an unsolicited dialog. Live worker request successfully selected an existing local folder. Native picker UI remains user initiated. Windows/Linux picker adapters are provided but not platform-qualified. Installed in the isolated local preview; public tags and npm version unchanged.
+
+
+## Orca 0.2.1 publication
+
+Owner requested submission of the folder browsing and absolute-path copy changes to Orca. Plugin patch version is 0.2.1; the Architect npm dependency remains 0.2.2. Public version tags are immutable. TypeScript, 16 worker/bridge/runtime tests, 17 browser checks and manifest/panel validation are required before publishing. CI now includes the panel browser checks. Orca directory listing is a separate maintainer-controlled review, not implied by a successful GitHub release.
