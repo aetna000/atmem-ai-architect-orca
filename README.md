@@ -63,4 +63,4 @@ AtMem code is Apache-2.0. DM Sans is bundled under its SIL Open Font License in 
 
 ## Optional star invitation
 
-After 60 seconds of visible use in the Architect tab opened through Orca, a dismissible invitation links to this plugin's GitHub page. It pauses while the tab is hidden and defers during dialogs, active work or an unsent draft. **Not now**, close and Escape snooze it for 30 days; **Don’t ask again** disables it. Following the link suppresses future invitations without asserting that a star was given. Preferences stay in local browser storage; no account checks or telemetry are added.
+After 60 seconds of visible use in the Architect tab opened through Orca, a dismissible invitation opens the plugin's Orca listing as its primary action, with a secondary GitHub Star link. It pauses while the tab is hidden and defers during dialogs, active work or an unsent draft. **Not now**, close and Escape snooze it for 30 days; **Don’t ask again** disables it. Following the link suppresses future invitations without asserting that a star was given. Preferences stay in local browser storage; no account checks or telemetry are added.

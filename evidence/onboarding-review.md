@@ -128,3 +128,8 @@ Owner requested submission of the folder browsing and absolute-path copy changes
 Added an optional invitation to the verified Architect tab opened by the plugin, after 60 seconds of visible use. It links to the plugin repository's GitHub Star control. Hidden time does not count; dialogs, model work and drafts defer the invitation. Not now/close/Escape snooze 30 days, permanent opt-out is available, and opening the link suppresses future prompts without claiming a star. No requests read or change a user's GitHub account.
 
 Eight accelerated browser checks cover the exact delay, snooze, permanent opt-out, link destination/state, Escape, drafts/modals, hidden time and active-generation deferral. Native dialog focus handling keeps the default action on Not now. Public release/tag publication remains stopped at the owner's request.
+
+
+## Orca-first invitation
+
+Owner clarified that Orca should be the primary destination. The invitation now offers Open on Orca first and Star on GitHub second. The Orca listing currently exposes GitHub-star metrics, not a separately available native star action; the primary label accurately opens the listing. Nine accelerated browser checks verify both destinations, ordering, preferences and existing timing/dismissal behavior. Publication remains paused.
