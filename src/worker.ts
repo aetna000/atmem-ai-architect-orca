@@ -6,6 +6,7 @@ import {mkdir, mkdtemp, realpath} from 'node:fs/promises'
 import {homedir} from 'node:os'
 import {join} from 'node:path'
 import {modelSetupReady,openModelSetup} from '../panel/model-onboarding.mjs'
+import {chooseLocalFolder} from './local-folders'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'|'outdated'> {
   try {
@@ -22,18 +23,24 @@ export async function probe(url:string):Promise<'ready'|'offline'|'occupied'|'ou
   }catch(error){return (error as {cause?:{code?:string}}).cause?.code==='ECONNREFUSED'?'offline':'occupied'}
 }
 export default function activate(orca:OrcaWorkerApi) {
+  const registerWorkspace=async(path:string,signal?:AbortSignal)=>{
+    const {stdout}=await run('orca',['repo','add','--environment','local','--path',path,'--kind','folder','--json'],{signal,timeout:20000,maxBuffer:1048576})
+    if(!JSON.parse(stdout).ok)throw Error('Orca could not add that folder. Retry.')
+    const {workspaces}=await orca.host.call('workspace.list',{})
+    const ws=workspaces.find(w=>w.path===path&&(w.hostId===null||w.hostId==='local'))
+    if(!ws)throw Error('Folder added. Reload folders to select it.')
+    return ws.id
+  }
   const controller=createController(orca,{
+    chooseFolder:chooseLocalFolder,
+    registerWorkspace,
     probe,
     progress:message=>orca.panels.post('architect.progress',{message}),
     createWorkspace:async name=>{
       const parent=join(homedir(),'.atmem-architect','orca-projects')
       await mkdir(parent,{recursive:true,mode:0o700})
       const path=await realpath(await mkdtemp(join(parent,name.replace(/[^a-zA-Z0-9-]/g,'-').slice(0,50)+'-')))
-      await run('orca',['repo','add','--environment','local','--path',path,'--kind','folder','--json'],{timeout:20000,maxBuffer:1048576})
-      const {workspaces}=await orca.host.call('workspace.list',{})
-      const ws=workspaces.find(w=>w.path===path&&(w.hostId===null||w.hostId==='local'))
-      if(!ws)throw Error('Folder created. Refresh folders and select it to continue.')
-      return ws.id
+      return registerWorkspace(path)
     },
     closeTerminal:async terminalId=>{
       const {stdout}=await run('orca',['terminal','list','--environment','local','--json'],{timeout:15000,maxBuffer:2097152})
@@ -68,6 +75,7 @@ export default function activate(orca:OrcaWorkerApi) {
       }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}
     }
   })
+  orca.panels.handle('architect.browse',(input,{signal})=>controller.browse(input,signal))
   orca.panels.handle('architect.overview',controller.overview)
   orca.panels.handle('architect.start',controller.start)
   orca.panels.handle('architect.stop',controller.stop)

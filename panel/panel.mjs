@@ -25,6 +25,7 @@ function render(){
  $('template-description').textContent=chosen.description
  for(const button of document.querySelectorAll('[data-template]')){button.setAttribute('aria-pressed',String(button.dataset.template===state.template));button.disabled=state.busy}
  $('project-name').disabled=state.busy||existing||demo;$('project-name').required=!existing&&!demo
+ $('browse-folder').disabled=state.busy||state.loading;$('use-local-folder').disabled=state.busy||state.loading;$('local-folder-path').disabled=state.busy
  $('folder').disabled=state.busy||state.loading;options('folder',state.projects,state.selected,state.loading?'Loading folders…':'Choose a folder')
  const folderPath=state.projects.find(item=>item.id===state.selected)?.path||''
  $('folder').title=folderPath||'Choose a folder to see its location'
@@ -106,6 +107,18 @@ document.querySelector('.switcher').addEventListener('keydown',event=>{
 })
 $('project-name').addEventListener('input',render)
 $('folder').addEventListener('change',()=>{state.selected=$('folder').value;state.source='';state.opened=false;notice();void refresh()})
+async function browseLocalFolder(input={}){
+ await act(async()=>{
+  const result=await orca.plugin.request('architect.browse',input,{timeoutMs:120000})
+  if(result.cancelled)return {message:''}
+  state.selected=result.workspaceId;state.opened=false;state.source='';state.mode='folder'
+  await refresh()
+  return {message:'Folder selected. Open its design in Architect.'}
+ })
+}
+$('browse-folder').addEventListener('click',()=>void browseLocalFolder())
+$('use-local-folder').addEventListener('click',()=>void browseLocalFolder({path:$('local-folder-path').value}))
+$('local-folder-path').addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();void browseLocalFolder({path:$('local-folder-path').value})}})
 $('folder-path').addEventListener('click',()=>$('folder-path').select())
 $('copy-folder-path').addEventListener('click',async()=>{
  if($('copy-folder-path').disabled)return

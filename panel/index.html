@@ -34,6 +34,8 @@
           <input id="project-name" name="projectName" placeholder="e.g. Customer support assistant" maxlength="100" autocomplete="off">
         </section>
         <section id="folder-fields" role="tabpanel" aria-labelledby="folder-tab" hidden>
+          <button id="browse-folder" class="browse-folder" type="button">Browse local folder…</button>
+          <details class="local-folder-entry"><summary>Enter folder path</summary><div><input id="local-folder-path" aria-label="Local folder path" placeholder="Absolute folder path" autocomplete="off" spellcheck="false"><button id="use-local-folder" type="button">Use folder</button></div></details>
           <label for="folder">Orca folder</label>
           <select id="folder"><option value="">Choose a folder</option></select>
           <div id="folder-location" class="folder-location" hidden>

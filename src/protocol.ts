@@ -5,6 +5,7 @@ export type Document = {path: string; label: string}
 export {}
 declare module 'orca' {
   interface PluginRequests {
+    'architect.browse': {input:{path?:string}|null;output:{cancelled:boolean;workspaceId?:string}}
     'architect.overview': {output: Overview}
     'architect.start': {input: {workspaceId:string}; output: Action}
     'architect.stop': {output: Action}

@@ -1,6 +1,6 @@
 import type {OrcaWorkerApi} from 'orca/worker'
 import {lstat, realpath} from 'node:fs/promises'
-import {resolve, relative, sep} from 'node:path'
+import {resolve, relative, sep, isAbsolute} from 'node:path'
 import type {Document} from './protocol'
 import {createHash} from 'node:crypto'
 import {designSources, readDesign, connectDesign} from './project-bridge'
@@ -26,6 +26,8 @@ export type Dependencies = {
   openBrowser:(url:string,workspaceId:string)=>Promise<void>
   closeTerminal:(terminalId:string)=>Promise<boolean>
   connectDesign?:(url:string,file:ProjectFile|undefined,id:string|undefined,name:string)=>Promise<string>
+  chooseFolder?:(signal?:AbortSignal)=>Promise<string|undefined>
+  registerWorkspace?:(path:string,signal?:AbortSignal)=>Promise<string>
   createWorkspace?:(name:string)=>Promise<string>
   progress?:(message:string)=>void
   wait?:()=>Promise<void>
@@ -61,6 +63,26 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     const target=await realpath(current),rel=relative(root,target)
     if(rel==='..'||rel.startsWith('..'+sep)||!(await lstat(target)).isFile())throw Error('Choose a regular project document.')
     return {ws,path}
+  }
+  let browsing=false
+  const browse=async(input:{path?:string}|null={},signal?:AbortSignal)=>{
+    if(browsing||opening)throw Error('Finish the current folder action first.')
+    browsing=true
+    try{
+      const path=input?.path===undefined?await deps.chooseFolder?.(signal):input.path
+      if(path===undefined)return {cancelled:true as const}
+      if(typeof path!=='string'||!isAbsolute(path))throw Error('Enter an absolute folder path.')
+      let root:string
+      try{root=await realpath(path);if(!(await lstat(root)).isDirectory())throw Error('not-directory')}
+      catch{throw Error('Choose an existing folder you can access.')}
+      signal?.throwIfAborted()
+      for(const ws of await workspaces()){
+        try{if(await realpath(ws.path)===root)return {cancelled:false as const,workspaceId:ws.id}}catch{/* Ignore unavailable existing folders. */}
+      }
+      signal?.throwIfAborted()
+      if(!deps.registerWorkspace)throw Error('Add this folder to Orca, then refresh folders.')
+      return {cancelled:false as const,workspaceId:await deps.registerWorkspace(root,signal)}
+    }finally{browsing=false}
   }
   const overview=async()=>{
     const {url}=await configuration()
@@ -171,5 +193,5 @@ export function createController(orca:OrcaWorkerApi, deps:Dependencies) {
     await orca.host.call('editor.open',{workspaceId:ws.id,path})
     return {message:'Opened project document.'}
   }
-  return {overview,start,stop,open,documents,document}
+  return {overview,start,stop,open,documents,document,browse}
 }

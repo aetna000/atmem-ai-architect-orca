@@ -31,6 +31,13 @@ try{
     listeners['architect.progress']?.({message:'Loading your design…'})
     return {message:'Your design is open.',workspaceId:'example',projectId:'example-design'}
    }
+   if(name==='architect.browse'){
+    if(f.browseCancelled)return {cancelled:true}
+    const path=input?.path||'/Users/example/Local projects/AI assistant'
+    f.projects.push({id:'picked-folder',name:'AI assistant',path,updatedAt:1794700000002,dateKind:'opened'})
+    f.designs=[{path:'project.atmem-ai-architect.json',name:'Saved local design'}]
+    return {cancelled:false,workspaceId:'picked-folder'}
+   }
    if(name==='architect.stop'){f.runtime='offline';f.owned=false;return {message:'Architect stopped.'}}
    return {message:'Opened document.'}
   }},on:()=>({dispose(){}}),host:{call:async()=>({opened:true})}}
@@ -111,6 +118,30 @@ try{
  assert.equal(await page.locator('#copy-folder-path').isDisabled(),true)
  assert.equal(await page.locator('#folder-path').inputValue(),'')
  assert.equal(await page.locator('#folder-location').isVisible(),false);checks++
+ await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ await page.getByRole('tab',{name:'Open folder',exact:true}).click()
+ await page.evaluate(()=>window.fixture.browseCancelled=true)
+ const beforeCancel=await page.locator('#folder').inputValue()
+ await page.getByRole('button',{name:'Browse local folder…',exact:true}).click()
+ await page.waitForFunction(()=>!document.querySelector('#browse-folder').disabled)
+ assert.equal(await page.locator('#folder').inputValue(),beforeCancel)
+ assert.equal(await page.evaluate(()=>window.fixture.calls.some(c=>c.name==='architect.open')),false);checks++
+ await page.evaluate(()=>window.fixture.browseCancelled=false)
+ await page.getByRole('button',{name:'Browse local folder…',exact:true}).click()
+ await page.getByRole('status').filter({hasText:'Folder selected.'}).waitFor()
+ assert.equal(await page.locator('#folder-path').inputValue(),'/Users/example/Local projects/AI assistant')
+ await page.getByRole('button',{name:'Open design in Architect',exact:true}).click()
+ await page.getByRole('button',{name:'Continue in Architect',exact:true}).waitFor()
+ assert.deepEqual(await page.evaluate(()=>window.fixture.calls.find(c=>c.name==='architect.open').input),{workspaceId:'picked-folder',source:'project.atmem-ai-architect.json'});checks++
+ await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
+ await page.getByRole('tab',{name:'Open folder',exact:true}).click()
+ await page.getByText('Enter folder path',{exact:true}).click()
+ await page.getByRole('textbox',{name:'Local folder path',exact:true}).fill('/Volumes/Work/My local project')
+ await page.getByRole('textbox',{name:'Local folder path',exact:true}).press('Enter')
+ await page.getByRole('status').filter({hasText:'Folder selected.'}).waitFor()
+ assert.equal(await page.locator('#folder-path').inputValue(),'/Volumes/Work/My local project')
+ assert.equal(await page.evaluate(()=>window.fixture.calls.some(c=>c.name==='architect.open')),false)
+ await page.screenshot({path:'/tmp/architect-browse-local-folder.png',fullPage:true});checks++
  const modelPage=await browser.newPage()
  await modelPage.goto(url+'?project=example-design')
  await modelPage.evaluate(()=>{
@@ -130,5 +161,5 @@ try{
  await modelPage.evaluate(()=>{document.querySelector('[role="dialog"]').remove();document.querySelector('button').textContent='Connected model'})
  assert.equal(await modelPage.evaluate(openModelSetup),'already-connected');checks++
  assert.deepEqual(errors,[])
- console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, folder path hover/copy/fallback, model setup.`)
+ console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, local browse/cancel/path entry, folder path hover/copy/fallback, model setup.`)
 }finally{await browser.close();await new Promise(r=>server.close(r))}
