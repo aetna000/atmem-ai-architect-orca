@@ -133,3 +133,10 @@ Eight accelerated browser checks cover the exact delay, snooze, permanent opt-ou
 ## Orca-first invitation
 
 Owner clarified that Orca should be the primary destination. The invitation now offers Open on Orca first and Star on GitHub second. The Orca listing currently exposes GitHub-star metrics, not a separately available native star action; the primary label accurately opens the listing. Nine accelerated browser checks verify both destinations, ordering, preferences and existing timing/dismissal behavior. Publication remains paused.
+
+
+## Separate one-time invitations and permanent gold control
+
+Owner requested separate Orca/GitHub prompts and a visible golden star. Orca is offered at one minute of visible use and GitHub at two minutes, with a minimum one-minute gap after the first closes. Invitations never overlap and each destination is shown once. Not now/close/Escape dismiss the current offer; permanent opt-out stops both. Legacy opt-outs, link choices and snoozes are respected. The footer gold star opens support links on demand through Orca's user-gesture external-link API.
+
+Checks: 12 accelerated support-browser cases cover 1m/2m timing, single-destination dialogs, non-overlap/gaps, one-time persistence, both links, opt-out, deferred/hidden use, legacy preferences and unavailable storage. Three panel browser cases cover the gold star's links, menu closing and keyboard dismissal. Public tags and versions are unchanged; publishing remains paused.

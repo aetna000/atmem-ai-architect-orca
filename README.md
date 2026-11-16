@@ -61,6 +61,10 @@ Use `orca plugin dev load . --json` for local development. Local plugins use `lo
 AtMem code is Apache-2.0. DM Sans is bundled under its SIL Open Font License in `assets/fonts/DM-Sans-OFL.txt`. This is an AtMem integration, not an Orca endorsement.
 
 
-## Optional star invitation
+## Optional support invitations
 
-After 60 seconds of visible use in the Architect tab opened through Orca, a dismissible invitation opens the plugin's Orca listing as its primary action, with a secondary GitHub Star link. It pauses while the tab is hidden and defers during dialogs, active work or an unsent draft. **Not now**, close and Escape snooze it for 30 days; **Don’t ask again** disables it. Following the link suppresses future invitations without asserting that a star was given. Preferences stay in local browser storage; no account checks or telemetry are added.
+The Architect tab opened through Orca shows two separate, one-time invitations: Orca after one minute of visible use, then GitHub after two minutes. Only one appears at a time, with at least one minute between dismissing the first and showing the second. Timers pause while hidden and defer during dialogs, generation or an unsent draft.
+
+Each destination is offered once. **Not now**, close and Escape dismiss that invitation; **Don’t ask again** disables both. Existing opt-outs and snoozes are preserved. Link clicks record only a visited destination, never a claimed star. Preferences remain local; no account checks or telemetry are added.
+
+A visible gold star in the plugin footer opens the Orca and GitHub support links on demand. Orca is the first destination; the public listing currently displays GitHub stars rather than a separate native rating action.

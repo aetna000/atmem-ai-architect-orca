@@ -40,12 +40,22 @@ try{
    }
    if(name==='architect.stop'){f.runtime='offline';f.owned=false;return {message:'Architect stopped.'}}
    return {message:'Opened document.'}
-  }},on:()=>({dispose(){}}),host:{call:async()=>({opened:true})}}
+  }},on:()=>({dispose(){}}),host:{call:async(name,input)=>{window.fixture.hostCalls||=[];window.fixture.hostCalls.push({name,input});return {opened:true}}}}
  })
  await page.addInitScript(()=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.fixture.copied=text}}}))
  const url=`http://127.0.0.1:${server.address().port}/panel/index.html`
  await page.goto(url);await page.getByText('Running locally',{exact:true}).waitFor()
  assert.match(await page.locator('#folder option').nth(1).textContent(),/Support assistant.*Opened.*2026/)
+ const support=page.locator('details.support-star'),star=support.locator('summary')
+ assert.equal(await star.isVisible(),true)
+ await star.click();assert.equal(await support.getByRole('link',{name:'Open on Orca ↗',exact:true}).getAttribute('href'),'https://orca.dev/plugins/aetna000/atmem-ai-architect-orca')
+ await support.getByRole('link',{name:'Open on Orca ↗',exact:true}).click()
+ assert.deepEqual(await page.evaluate(()=>window.fixture.hostCalls.at(-1)),{name:'shell.openExternal',input:{url:'https://orca.dev/plugins/aetna000/atmem-ai-architect-orca'}})
+ assert.equal(await support.getAttribute('open'),null);checks++
+ await star.click();await support.getByRole('link',{name:'Star on GitHub ↗',exact:true}).click()
+ assert.deepEqual(await page.evaluate(()=>window.fixture.hostCalls.at(-1)),{name:'shell.openExternal',input:{url:'https://github.com/aetna000/atmem-ai-architect-orca'}});assert.equal(await support.getAttribute('open'),null);checks++
+ await star.click();await page.keyboard.press('Escape');assert.equal(await support.getAttribute('open'),null);checks++
+
  await page.screenshot({path:'/tmp/architect-reference-560.png',fullPage:true})
  assert.equal(await page.getByRole('link',{name:'atmem.ai ↗',exact:true}).getAttribute('href'),'https://atmem.ai')
  assert.equal(await page.getByRole('link',{name:'Contact us: hello@atmem.ai',exact:true}).getAttribute('href'),'mailto:hello@atmem.ai')
@@ -161,5 +171,5 @@ try{
  await modelPage.evaluate(()=>{document.querySelector('[role="dialog"]').remove();document.querySelector('button').textContent='Connected model'})
  assert.equal(await modelPage.evaluate(openModelSetup),'already-connected');checks++
  assert.deepEqual(errors,[])
- console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, local browse/cancel/path entry, folder path hover/copy/fallback, model setup.`)
+ console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, gold support control, local browse/cancel/path entry, folder path hover/copy/fallback, model setup.`)
 }finally{await browser.close();await new Promise(r=>server.close(r))}
