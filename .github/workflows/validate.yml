@@ -20,4 +20,4 @@ jobs:
       - run: orca --version && orca plugin types . --json
       - run: npm run typecheck && npm test && npm run check
       - run: npx playwright install chromium
-      - run: npm run test:panel
+      - run: npm run test:panel && npm run test:star

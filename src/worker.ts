@@ -7,6 +7,7 @@ import {homedir} from 'node:os'
 import {join} from 'node:path'
 import {modelSetupReady,openModelSetup} from '../panel/model-onboarding.mjs'
 import {chooseLocalFolder} from './local-folders'
+import {pluginStarPrompt} from '../panel/plugin-star.mjs'
 const run=promisify(execFile)
 export async function probe(url:string):Promise<'ready'|'offline'|'occupied'|'outdated'> {
   try {
@@ -72,6 +73,9 @@ export default function activate(orca:OrcaWorkerApi) {
           const setup=await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',openModelSetup,'--json'],{timeout:10000,maxBuffer:1048576})
           if(!JSON.parse(setup.stdout).ok)throw Error('Model setup could not open.')
         }
+        // Optional invitation must never turn a successful project open into an error.
+        try{await run('orca',['eval','--environment','local','--page',pageId,'--expect-url',address.href,'--expression',pluginStarPrompt,'--json'],{timeout:10000,maxBuffer:1048576})}catch{/* A later open can schedule the invitation. */}
+
       }catch{throw Error('Architect is open. Choose “Connect a model” there; automatic setup could not open.')}
     }
   })

@@ -6,7 +6,8 @@
     "test": "orca plugin test . --json",
     "check": "orca plugin validate . --json && orca plugin check . --json",
     "typecheck": "tsc -p . --noEmit",
-    "test:panel": "node scripts/panel-browser-check.mjs"
+    "test:panel": "node scripts/panel-browser-check.mjs",
+    "test:star": "node scripts/plugin-star-browser-check.mjs"
   },
   "keywords": [],
   "author": "AtMem <hello@atmem.ai>",

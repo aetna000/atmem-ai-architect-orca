@@ -121,3 +121,10 @@ Checks: TypeScript; 16 worker/bridge/runtime tests; 17 panel browser checks; plu
 ## Orca 0.2.1 publication
 
 Owner requested submission of the folder browsing and absolute-path copy changes to Orca. Plugin patch version is 0.2.1; the Architect npm dependency remains 0.2.2. Public version tags are immutable. TypeScript, 16 worker/bridge/runtime tests, 17 browser checks and manifest/panel validation are required before publishing. CI now includes the panel browser checks. Orca directory listing is a separate maintainer-controlled review, not implied by a successful GitHub release.
+
+
+## Timed plugin-star invitation (publishing paused)
+
+Added an optional invitation to the verified Architect tab opened by the plugin, after 60 seconds of visible use. It links to the plugin repository's GitHub Star control. Hidden time does not count; dialogs, model work and drafts defer the invitation. Not now/close/Escape snooze 30 days, permanent opt-out is available, and opening the link suppresses future prompts without claiming a star. No requests read or change a user's GitHub account.
+
+Eight accelerated browser checks cover the exact delay, snooze, permanent opt-out, link destination/state, Escape, drafts/modals, hidden time and active-generation deferral. Native dialog focus handling keeps the default action on Not now. Public release/tag publication remains stopped at the owner's request.

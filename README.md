@@ -59,3 +59,8 @@ npm run test:panel
 Use `orca plugin dev load . --json` for local development. Local plugins use `local.atmem-architect`; Git installations use `aetna000.atmem-architect`. Public releases use versioned immutable Git tags and Orca's directory indexer.
 
 AtMem code is Apache-2.0. DM Sans is bundled under its SIL Open Font License in `assets/fonts/DM-Sans-OFL.txt`. This is an AtMem integration, not an Orca endorsement.
+
+
+## Optional star invitation
+
+After 60 seconds of visible use in the Architect tab opened through Orca, a dismissible invitation links to this plugin's GitHub page. It pauses while the tab is hidden and defers during dialogs, active work or an unsent draft. **Not now**, close and Escape snooze it for 30 days; **Don’t ask again** disables it. Following the link suppresses future invitations without asserting that a star was given. Preferences stay in local browser storage; no account checks or telemetry are added.
