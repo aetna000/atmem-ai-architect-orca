@@ -3,7 +3,7 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Explore a complete AI project, create your own design and download project files inside Orca. Contact: hello@atmem.ai.",
   "author": {
     "name": "AtMem",

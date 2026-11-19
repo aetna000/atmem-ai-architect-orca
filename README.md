@@ -13,7 +13,7 @@ Explore a complete AI project, then create your own architecture inside Orca.
 Requires Orca 1.4.257+, Node.js 22+ and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.2.1 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.2.2 --json
 ```
 
 Orca shows the exact worker permissions before enabling the plugin.
@@ -29,7 +29,7 @@ Templates offer other starting designs. A personal blank project requires a name
 
 The complete example includes Sydney/Australia settings, an illustrative AWS cost worksheet with official price snapshots, requirements, generated application and Terraform source, a built Python 3.13/ARM64 runtime, and local test evidence. Its 13 application tests and two Terraform mock plans do not establish live deployment or real tenant integration. Usage assumptions are included; the estimate is not a bill or client quote.
 
-The portable reference ZIP is supplied by Architect 0.2.2. It works on a new installation without a pre-existing engineering session. Current-project checks remain separate from the immutable reference download. Chat stays compact, its introduction is retractable, and introduction/voice controls share the top toolbar. **Reset board** creates a fresh board, chat, requirements and decision context, preserving saved projects and the model connection.
+The portable reference ZIP is supplied by Architect 0.2.5. It works on a new installation without a pre-existing engineering session. Current-project checks remain separate from the immutable reference download. Chat stays compact, its introduction is retractable, and introduction/voice controls share the top toolbar. **Reset board** creates a fresh board, chat, requirements and decision context, preserving saved projects and the model connection.
 
 ## Saved designs
 
@@ -43,7 +43,7 @@ Startup reports progress and verifies the local service. Older plugin-owned runt
 
 This trusted worker runs Node code with your account's access. Orca grants local workspace read/write, terminal commands, and private plugin storage/settings. The implementation rejects remote workspaces, document traversal/symlink escapes, and ports serving another application. No telemetry, automatic model requests or cloud deployment is added.
 
-The plugin pins `@atmem/architect@0.2.2`, including AtMem 2.3.14. The npm runtime is checked through the linked GitHub Actions workflow. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
+The plugin pins `@atmem/architect@0.2.5`, including AtMem 2.3.15. The npm runtime is checked through the linked GitHub Actions workflow. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
 
 ## Develop
 

@@ -140,3 +140,9 @@ Owner clarified that Orca should be the primary destination. The invitation now 
 Owner requested separate Orca/GitHub prompts and a visible golden star. Orca is offered at one minute of visible use and GitHub at two minutes, with a minimum one-minute gap after the first closes. Invitations never overlap and each destination is shown once. Not now/close/Escape dismiss the current offer; permanent opt-out stops both. Legacy opt-outs, link choices and snoozes are respected. The footer gold star opens support links on demand through Orca's user-gesture external-link API.
 
 Checks: 12 accelerated support-browser cases cover 1m/2m timing, single-destination dialogs, non-overlap/gaps, one-time persistence, both links, opt-out, deferred/hidden use, legacy preferences and unavailable storage. Three panel browser cases cover the gold star's links, menu closing and keyboard dismissal. Public tags and versions are unchanged; publishing remains paused.
+
+## Architect 0.2.5 update — 2026-11-20
+
+Plugin 0.2.2 pins npm @atmem/architect@0.2.5 and displays the matching version. Startup verifies the published browser bundle (index-2G3RnR9L.js) before accepting the portable reference runtime, so older portable releases are detected. Only a plugin-recorded runtime can be restarted automatically; independently started servers remain under user control.
+
+Verified npm 0.2.5 availability and the real npm-installed runtime on temporary port 15176: matching browser bundle, ZIP signature and rendered Connect a model control. TypeScript, 16 worker tests (including old portable runtime detection), 20 panel checks, 12 support checks and Orca manifest/render validation passed. Windows/Linux execution remains unqualified.

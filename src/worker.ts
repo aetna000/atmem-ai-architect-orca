@@ -17,6 +17,8 @@ export async function probe(url:string):Promise<'ready'|'offline'|'occupied'|'ou
     let text='',bytes=0
     try{while(true){const {value,done}=await reader.read();if(done)break;bytes+=value.length;if(bytes>65536)return 'occupied';text+=new TextDecoder().decode(value)}}finally{await reader.cancel()}
     if(!response.ok||!text.includes('<title>AtMem.ai | AI Architect</title>'))return 'occupied'
+    // Published 0.2.5 browser bundle: distinguish older portable runtimes before reusing their server.
+    if(!text.includes('/assets/index-2G3RnR9L.js'))return 'outdated'
     const example=await fetch(url+'/reference-example.zip',{signal:AbortSignal.timeout(3000),redirect:'error'})
     const content=example.body?.getReader();if(!content)return 'outdated'
     try{const first=await content.read();return example.ok&&first.value?.[0]===80&&first.value?.[1]===75?'ready':'outdated'}finally{await content.cancel()}

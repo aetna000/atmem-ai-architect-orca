@@ -16,7 +16,7 @@ test('lists only local projects and starts pinned Architect once under concurren
  assert.equal((await c.overview()).workspaces[0].id,'local-1');assert.equal((await c.overview()).workspaces[0].path,root)
  await Promise.all([c.start({workspaceId:'local-1'}),c.start({workspaceId:'local-1'})])
  assert.equal(host.callsOf('terminal.create').length,1)
- assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.2 --no-open --port 5176'})
+ assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes @atmem/architect@0.2.5 --no-open --port 5176'})
  await assert.rejects(()=>c.start({workspaceId:'local-1'}),/Stop the previous/)
  assert.equal((await c.stop()).message,'Architect terminal closed.')
 }))
@@ -87,12 +87,12 @@ test('runtime probe distinguishes old Architect, portable runtime and unrelated 
  const {createServer}=await import('node:http')
  let mode='old'
  const server=createServer((req,res)=>{
-  if(req.url==='/reference-example.zip'){res.end(mode==='new'?Buffer.from([80,75,3,4]):Buffer.from('<html>old app</html>'));return}
-  res.end(mode==='other'?'<title>Other app</title>':'<title>AtMem.ai | AI Architect</title>')
+  if(req.url==='/reference-example.zip'){res.end(mode!=='old'?Buffer.from([80,75,3,4]):Buffer.from('<html>old app</html>'));return}
+  res.end(mode==='other'?'<title>Other app</title>':'<title>AtMem.ai | AI Architect</title>'+(mode==='new'?'<script src="/assets/index-2G3RnR9L.js"></script>':''))
  })
  await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve))
  const url='http://127.0.0.1:'+String((server.address() as {port:number}).port)
- try{assert.equal(await probe(url),'outdated');mode='new';assert.equal(await probe(url),'ready');mode='other';assert.equal(await probe(url),'occupied')}finally{await new Promise<void>(resolve=>server.close(()=>resolve()))}
+ try{assert.equal(await probe(url),'outdated');mode='portable-old';assert.equal(await probe(url),'outdated');mode='new';assert.equal(await probe(url),'ready');mode='other';assert.equal(await probe(url),'occupied')}finally{await new Promise<void>(resolve=>server.close(()=>resolve()))}
 })
 
 test('upgrades only its recorded older runtime before opening a design',async()=>{
