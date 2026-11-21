@@ -3,8 +3,8 @@
   "manifestVersion": 2,
   "id": "atmem-architect",
   "name": "AtMem AI Architect",
-  "version": "0.2.2",
-  "description": "Explore a complete AI project, create your own design and download project files inside Orca. Contact: hello@atmem.ai.",
+  "version": "0.2.3",
+  "description": "Explore a runnable AI example, create your own design and download project files inside Orca. Contact: hello@atmem.ai.",
   "author": {
     "name": "AtMem",
     "url": "https://atmem.ai"
@@ -74,8 +74,8 @@
     },
     {
       "path": "assets/complete-example-delivery.png",
-      "alt": "Prepared AI reference Delivery with requirements, costs, source and eight completed reference checks.",
-      "caption": "Download the complete reference example, with costs, built runtime and local check evidence."
+      "alt": "Recorded reference Delivery with requirements, costs, source and local reference checks.",
+      "caption": "Explore the bounded reference example, with costs, built runtime and local check evidence."
     }
   ]
 }

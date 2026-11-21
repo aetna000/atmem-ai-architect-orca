@@ -3,11 +3,18 @@ export const modelSetupReady = `(() => {
   try {
     const project = new URL(location.href).searchParams.get('project');
     const saved = JSON.parse(localStorage.getItem('atforma-workspace-v3') || 'null');
-    return !!project && saved?.id === project && !!document.querySelector('button.model') && !document.querySelector('[role="dialog"][aria-label="welcome"]');
+    return !!project && saved?.id === project && !!document.querySelector('button.model,button[aria-label="Show chat"]') && !document.querySelector('[role="dialog"][aria-label="welcome"]');
   } catch { return false; }
 })()`
-export const openModelSetup = `(() => {
-  const button = document.querySelector('button.model');
+export const openModelSetup = `(async () => {
+  let button = document.querySelector('button.model');
+  if (!button) {
+    document.querySelector('button[aria-label="Show chat"]')?.click();
+    for (let attempt = 0; attempt < 40 && !button; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 50));
+      button = document.querySelector('button.model');
+    }
+  }
   if (!button) throw Error('Model connection control is unavailable.');
   if (button.textContent.trim() !== 'Connect a model') return 'already-connected';
   if (document.querySelector('[role="dialog"]')) return 'dialog-already-open';

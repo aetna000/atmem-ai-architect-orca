@@ -1,10 +1,10 @@
 # AtMem AI Architect for Orca
 
-Explore a complete AI project, then create your own architecture inside Orca.
+Explore a runnable AI example, then create your own architecture inside Orca.
 
 ![AtMem AI Architect](assets/workspace-cover.png)
 
-[Complete reference Delivery](assets/complete-example-delivery.png)
+[Recorded reference Delivery](assets/complete-example-delivery.png)
 
 [Public listing](https://orca.dev/plugins/aetna000/atmem-ai-architect-orca) · [atmem.ai](https://atmem.ai) · [Contact us: hello@atmem.ai](mailto:hello@atmem.ai)
 
@@ -13,7 +13,7 @@ Explore a complete AI project, then create your own architecture inside Orca.
 Requires Orca 1.4.257+, Node.js 22+ and Orca CLI on PATH.
 
 ```sh
-orca plugin install aetna000/atmem-ai-architect-orca@v0.2.2 --json
+orca plugin install aetna000/atmem-ai-architect-orca@v0.2.3 --json
 ```
 
 Orca shows the exact worker permissions before enabling the plugin.
@@ -21,15 +21,21 @@ Orca shows the exact worker permissions before enabling the plugin.
 ## First project
 
 1. Open **AtMem AI Architect** in Orca's sidebar.
-2. Press **Start new** to explore the complete AI knowledge assistant. No name or model connection is required.
+2. Press **Start new** to explore the runnable AI knowledge assistant. No name or model connection is required.
 3. Open **Delivery** to review the sample checks and download the complete reference ZIP.
 4. Choose **Create new project** when ready. Connect your model to start chatting.
 
 Templates offer other starting designs. A personal blank project requires a name. **Open folder** reopens a saved design. **Browse local folder…** lets you choose a folder anywhere on your computer; **Enter folder path** also accepts an absolute path. Choose the folder, then select **Open design in Architect**. Existing Orca folders are reused instead of duplicated. Folders are listed newest first with dates. Hover a folder to see its absolute location, or use the copy button beside the path. Template previews have been removed.
 
-The complete example includes Sydney/Australia settings, an illustrative AWS cost worksheet with official price snapshots, requirements, generated application and Terraform source, a built Python 3.13/ARM64 runtime, and local test evidence. Its 13 application tests and two Terraform mock plans do not establish live deployment or real tenant integration. Usage assumptions are included; the estimate is not a bill or client quote.
+The bounded example includes Sydney/Australia settings, an illustrative AWS cost worksheet with official price snapshots, requirements, generated application and Terraform source, a built Python 3.13/ARM64 runtime, and local test evidence. Its 13 application tests and two Terraform mock plans do not establish live deployment or real tenant integration. Usage assumptions are included; the estimate is not a bill or client quote.
 
-The portable reference ZIP is supplied by Architect 0.2.5. It works on a new installation without a pre-existing engineering session. Current-project checks remain separate from the immutable reference download. Chat stays compact, its introduction is retractable, and introduction/voice controls share the top toolbar. **Reset board** creates a fresh board, chat, requirements and decision context, preserving saved projects and the model connection.
+The portable reference ZIP is supplied by Architect 0.2.6. It works on a new installation without a pre-existing engineering session. Current-project checks remain separate from the immutable reference download. Chat stays compact, its introduction is retractable, and introduction/voice controls share the top toolbar. Use Architect’s native **Create new project** action for a fresh project; saved projects remain available.
+
+## Architecture workspace
+
+Architect 0.2.6 adds 28 diagram types, page navigation, shape libraries and accessible Mermaid insert/edit. Keep short titles on shapes and numbered connections; select an element to inspect its full specification and contracts. Drag, resize and rotate shapes. Pan on blank canvas, with Space or the middle mouse button; wheel/pinch zoom follows the pointer.
+
+A diagram catalogue is design coverage, not proof that every generated project is implemented or ready to deploy. Large diagrams still need focus or panning. Local reference tests use fixtures and mocked AWS; review current-project gaps separately.
 
 ## Saved designs
 
@@ -43,7 +49,7 @@ Startup reports progress and verifies the local service. Older plugin-owned runt
 
 This trusted worker runs Node code with your account's access. Orca grants local workspace read/write, terminal commands, and private plugin storage/settings. The implementation rejects remote workspaces, document traversal/symlink escapes, and ports serving another application. No telemetry, automatic model requests or cloud deployment is added.
 
-The plugin pins `@atmem/architect@0.2.5`, including AtMem 2.3.15. The npm runtime is checked through the linked GitHub Actions workflow. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
+The plugin pins Architect 0.2.6 using its immutable GitHub release archive, including AtMem 2.3.15. The archive matches the accepted CI artifact; installed UI and real AtMem startup passed on macOS, Linux and Windows. npm 0.2.6 is also published with matching CI integrity; plugin startup uses the same qualified GitHub archive. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
 
 ## Develop
 

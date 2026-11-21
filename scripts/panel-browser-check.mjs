@@ -171,5 +171,13 @@ try{
  await modelPage.evaluate(()=>{document.querySelector('[role="dialog"]').remove();document.querySelector('button').textContent='Connected model'})
  assert.equal(await modelPage.evaluate(openModelSetup),'already-connected');checks++
  assert.deepEqual(errors,[])
+ await modelPage.evaluate(()=>{
+  document.querySelector('button').remove();
+  const show=document.createElement('button');show.setAttribute('aria-label','Show chat');document.body.append(show);
+  show.onclick=()=>{show.remove();const connect=document.createElement('button');connect.className='model';connect.textContent='Connect a model';document.body.append(connect);connect.onclick=()=>{const dialog=document.createElement('section');dialog.role='dialog';dialog.textContent='Connect your model';document.body.append(dialog)}};
+ });
+ assert.equal(await modelPage.evaluate(modelSetupReady),true,'Collapsed chat is a loaded project');
+ assert.equal(await modelPage.evaluate(openModelSetup),'opened');
+ await modelPage.getByRole('dialog').filter({hasText:'Connect your model'}).waitFor();checks++;
  console.log(`${checks} browser checks passed: create, runtime stop, keyboard tabs, saved-design failure, responsive layout, gold support control, local browse/cancel/path entry, folder path hover/copy/fallback, model setup.`)
 }finally{await browser.close();await new Promise(r=>server.close(r))}
