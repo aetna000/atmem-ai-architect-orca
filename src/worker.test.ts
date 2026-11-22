@@ -16,7 +16,7 @@ test('lists only local projects and starts pinned Architect once under concurren
  assert.equal((await c.overview()).workspaces[0].id,'local-1');assert.equal((await c.overview()).workspaces[0].path,root)
  await Promise.all([c.start({workspaceId:'local-1'}),c.start({workspaceId:'local-1'})])
  assert.equal(host.callsOf('terminal.create').length,1)
- assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes https://github.com/aetna000/atmem-ai-architect/releases/download/v0.2.6/atmem-architect-0.2.6.tgz --no-open --port 5176'})
+ assert.deepEqual(host.callsOf('terminal.create')[0],{workspaceId:'local-1',title:'AtMem AI Architect',command:'npx --yes https://github.com/aetna000/atmem-ai-architect/releases/download/v0.2.7/atmem-architect-0.2.7.tgz --no-open --port 5176'})
  await assert.rejects(()=>c.start({workspaceId:'local-1'}),/Stop the previous/)
  assert.equal((await c.stop()).message,'Architect terminal closed.')
 }))
@@ -88,7 +88,7 @@ test('runtime probe distinguishes old Architect, portable runtime and unrelated 
  let mode='old'
  const server=createServer((req,res)=>{
   if(req.url==='/reference-example.zip'){res.end(mode!=='old'?Buffer.from([80,75,3,4]):Buffer.from('<html>old app</html>'));return}
-  res.end(mode==='other'?'<title>Other app</title>':'<title>AtMem.ai | AI Architect</title>'+(mode==='new'?'<script src="/assets/index-BE2BW77J.js"></script>':''))
+  res.end(mode==='other'?'<title>Other app</title>':'<title>AtMem.ai | AI Architect</title>'+(mode==='new'?'<script src="/assets/index-Di7AHGel.js"></script>':''))
  })
  await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve))
  const url='http://127.0.0.1:'+String((server.address() as {port:number}).port)
