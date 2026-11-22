@@ -49,7 +49,7 @@ Startup reports progress and verifies the local service. Older plugin-owned runt
 
 This trusted worker runs Node code with your account's access. Orca grants local workspace read/write, terminal commands, and private plugin storage/settings. The implementation rejects remote workspaces, document traversal/symlink escapes, and ports serving another application. No telemetry, automatic model requests or cloud deployment is added.
 
-The plugin pins Architect 0.2.7 using its immutable GitHub release archive, including AtMem 2.3.15. The archive matches the accepted CI artifact; installed UI and real AtMem startup passed on macOS, Linux and Windows. npm 0.2.7 is also published with matching CI integrity; plugin startup uses the same qualified GitHub archive. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
+The plugin pins Architect 0.2.7 using its immutable GitHub release archive, including AtMem 2.3.15. The archive matches the accepted CI artifact; installed UI and real AtMem startup passed on macOS, Linux and Windows. The archive is distributed separately from npm; plugin startup uses the qualified GitHub archive. Orca execution is tested on macOS arm64; Windows/Linux Orca execution remains unqualified.
 
 ## Develop
 
